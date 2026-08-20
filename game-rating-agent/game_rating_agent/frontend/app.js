@@ -21,24 +21,16 @@ const auditDialog = byId("auditDialog"); // SPDX-License-Identifier: MIT | 缓�
 const auditContent = byId("auditContent"); // SPDX-License-Identifier: MIT | 缓存审计事件容器。
 const toast = byId("toast"); // SPDX-License-Identifier: MIT | 缓存状态提示容器。
 let toastTimer = 0; // SPDX-License-Identifier: MIT | 保存当前提示自动隐藏定时器。
-const stageOptions = [["idea", "只有想法"], ["concept", "已有概念方案"], ["pre_prototype", "正在验证核心玩法"], ["prototype", "已有可玩原型"], ["vertical_slice", "已有代表最终品质的试玩片段"], ["alpha", "内部测试版"], ["beta", "公开测试版"], ["release_candidate", "准备发布的候选版本"]]; // SPDX-License-Identifier: MIT | 用创作者能直接判断的自然中文表达服务端制作阶段。
+const stageOptions = [["idea", "构想"], ["concept", "概念"], ["pre_prototype", "预原型"], ["prototype", "原型"], ["vertical_slice", "垂直切片"], ["alpha", "Alpha"], ["beta", "Beta"], ["release_candidate", "候选版本"]]; // SPDX-License-Identifier: MIT | 定义服务端支持的制作阶段选项。
 const businessOptions = [["buyout", "买断"], ["iap", "内购"], ["ads", "广告"], ["subscription", "订阅"], ["dlc", "DLC"], ["noncommercial", "非商业"]]; // SPDX-License-Identifier: MIT | 定义服务端支持的商业模式选项。
-const objectExamples = { team: { size: 1, roles: ["独立创作者"], availability: "每周 20 小时" }, schedule: { planning_status: "preliminary", months: 12, budget: 500000, available_funding: 200000 }, progression_feedback: { mode: "in_match", in_match_progression: ["经济扩张", "科技升级"], meta_progression: [], feedback_signals: ["单位解锁", "地图控制变化"], decision_tradeoffs: "科技投入会延迟当前兵力", failure_learning: "战报和回放解释失败原因" }, production_feasibility: { scope_bounded: true, technical_path_known: true, platform_constraints_known: true, prototype_validation_plan: true, critical_dependencies: ["引擎性能"], unresolved_high_risks: [], blocking_constraints: [] }, social_competition: { not_applicable_reason: "首版为单人游戏，不需要社交竞争。" }, module_status: { core_design: "in_progress", prototype: "missing", ux: "missing", art: "missing", audio: "missing", qa: "missing", store_assets: "missing", compliance: "missing" } }; // SPDX-License-Identifier: MIT | 提供复杂对象题的可编辑 JSON 示例。
-const teamRoleOptions = ["独立创作者", "策划/产品", "程序/技术", "用户体验/交互", "美术", "音频", "测试/质量保障", "发行运营", "合规/隐私"]; // SPDX-License-Identifier: MIT | 使用中文能力名称定义个人与专业团队共用的快速选择项。
+const objectExamples = { team: { size: 1, roles: ["独立创作者"], availability: "每周 20 小时" }, schedule: { planning_status: "preliminary", months: 12, budget: 500000, available_funding: 200000 }, social_competition: { not_applicable_reason: "首版为单人游戏，不需要社交竞争。" }, module_status: { core_design: "in_progress", prototype: "missing", ux: "missing", art: "missing", audio: "missing", qa: "missing", store_assets: "missing", compliance: "missing" } }; // SPDX-License-Identifier: MIT | 提供复杂对象题的可编辑 JSON 示例。
+const teamRoleOptions = ["独立创作者", "策划/产品", "程序/技术", "UX/交互", "美术", "音频", "QA/测试", "发行运营", "合规/隐私"]; // SPDX-License-Identifier: MIT | 定义团队能力快速选择项并允许个人与专业团队共用。
 const planningStatusOptions = [["not_planned", "尚未规划"], ["preliminary", "已有初步计划"], ["confirmed", "已确认计划"]]; // SPDX-License-Identifier: MIT | 定义投入计划成熟度选项并允许明确回答不知道。
-const moduleDefinitions = [["core_design", "核心设计与规则"], ["prototype", "可运行原型"], ["ux", "用户体验与新手引导"], ["art", "美术资产"], ["audio", "音频与反馈"], ["qa", "测试与质量保障"], ["store_assets", "商店素材"], ["compliance", "合规与隐私"]]; // SPDX-License-Identifier: MIT | 定义第十六题全部生产模块的稳定代码与纯中文名称。
+const moduleDefinitions = [["core_design", "核心设计与规则"], ["prototype", "可运行原型"], ["ux", "UX 与新手引导"], ["art", "美术资产"], ["audio", "音频与反馈"], ["qa", "QA 与测试"], ["store_assets", "商店素材"], ["compliance", "合规与隐私"]]; // SPDX-License-Identifier: MIT | 定义第十六题全部生产模块的稳定代码与中文名称。
 const moduleStatusOptions = [["missing", "暂无"], ["planned", "已规划"], ["documented", "已形成文档"], ["in_progress", "进行中"], ["ready", "已完成/可用"], ["validated", "已验证"]]; // SPDX-License-Identifier: MIT | 定义模块状态的渐进式成熟度枚举。
 const innovationAxisOptions = [["core_loop", "核心循环"], ["decision_structure", "决策结构"], ["build_interaction", "构筑交互"], ["progression", "成长系统"], ["content_generation", "内容生成"], ["social_structure", "社交结构"], ["value_exchange", "价值交换"], ["presentation", "表现方式"], ["accessibility", "可访问性"]]; // SPDX-License-Identifier: MIT | 定义前后端一致的创新位置代码与中文名称。
-const innovationAxisTokens = { ability: "能力", accessibility: "可访问性", agency: "主导权", asymmetry: "不对称", authenticity: "真实性", boss: "首领", build: "构筑", card: "卡牌", career: "生涯", causality: "因果", challenge: "挑战", character: "角色", chart: "谱面", chemistry: "氛围", choice: "选择", collection: "收集", combat: "战斗", comeback: "逆转", condition: "条件", consequence: "后果", construction: "建造", content: "内容", cooperation: "协作", core: "核心", creator: "创作", crisis: "危机", customization: "自定义", decision: "决策", depth: "深度", diplomacy: "外交", discovery: "探索", draft: "选取", driving: "驾驶", economy: "经济", emergence: "涌现", encounter: "遭遇", endgame: "后期", energy: "能量", experience: "体验", expression: "表达", fair: "公平", failure: "失败", fear: "恐惧", feedback: "反馈", feel: "手感", fun: "乐趣", game: "博弈", generation: "生成", goal: "目标", growth: "成长", hero: "英雄", hint: "提示", identity: "特色", information: "信息", input: "操作", interaction: "交互", knowledge: "知识", learning: "学习", level: "关卡", loop: "循环", loot: "战利品", management: "经营", map: "地图", match: "对局", meaningful: "有意义", memory: "记忆", merge: "合成", mission: "任务", movement: "移动", music: "音乐", narrative: "叙事", neutral: "中立博弈", objective: "目标", order: "订单", pacing: "节奏", party: "队伍", player: "玩家", planning: "规划", presentation: "表现", pressure: "压力", progression: "成长", psychological: "心理", raid: "突袭", readability: "可读性", reactivity: "反应", recovery: "恢复", replay: "重复游玩", respect: "尊重", revive: "复活", reward: "奖励", risk: "风险", rivalry: "对抗", round: "回合", route: "路线", rule: "规则", run: "单局", safety: "安全", session: "会话", simulation: "模拟", social: "社交", solution: "解法", spectator: "观战", sport: "体育", story: "故事", structure: "结构", survival: "生存", synergy: "协同", system: "系统", tactics: "战术", team: "团队", teaching: "教学", threat: "威胁", time: "时间", track: "赛道", tradeoff: "取舍", training: "训练", turn: "回合", unit: "单位", urban: "城市", value: "价值", victory: "胜利", world: "世界" }; // SPDX-License-Identifier: MIT | 将类型知识库全部创新位置的组成词转换为中文，防止新手看到下划线英文代码。
-const validationMethodOptions = [["playtest", "目标玩家试玩"], ["interview", "玩家访谈"], ["survey", "结构化问卷"], ["telemetry", "行为数据埋点"], ["prototype_comparison", "两版原型对比"], ["market_test", "小规模市场测试"]]; // SPDX-License-Identifier: MIT | 用自然中文定义差异化验证方式并隐藏技术缩写。
-const dimensionNames = { core_loop: "核心循环", first_attraction: "首次吸引", sustained_motivation: "持续动机", progression_feedback: "成长反馈", content_structure: "内容结构", social_competition: "社交竞争", value_exchange: "价值交换", feasibility: "产品可实现性", innovation_candidate: "创新候选" }; // SPDX-License-Identifier: MIT | 将九维代码映射为中文名称并区分产品实现与资源准备。
-const featureNames = { ability_gating: "能力解锁区域", aim_combat: "瞄准射击", auto_battle: "自动战斗", backtracking: "获得能力后返回旧区域", base_building: "基地建设", base_destruction: "摧毁敌方基地", beat_timing: "节拍操作", boss_encounter: "首领战", boss_learning: "通过失败学习首领机制", branching_story: "分支剧情", card_draw: "抽牌", character_growth: "角色成长", character_interaction: "角色互动", character_route: "角色路线", checkpoint: "检查点", checkpoint_loss: "死亡损失与检查点", city_growth: "城市发展", collection_progress: "收集进度", combo: "连招", competitive_match: "竞技对局", crafting: "制作合成", creative_tools: "创作工具", daily_tasks: "每日任务", deck_building: "牌组构筑", dialogue: "对话", dialogue_choice: "对话选择", difficulty_curve: "难度曲线", difficulty_levels: "难度分级", dodge_timing: "闪避时机", economy_stash: "局外仓库经济", emergent_events: "系统涌现事件", encounter_choice: "遭遇选择", endgame_loop: "后期循环", ending_collection: "结局收集", enemy_farming: "刷怪获取资源", energy_cost: "能量费用", energy_limit: "行动能量限制", environmental_exploration: "环境探索", environmental_story: "环境叙事", expand: "领土扩张", expansion: "经营扩张", exploit: "资源利用", exploration: "探索", explore: "地图探索", exterminate: "消灭对手", feedback_loop: "操作反馈循环", grid_positioning: "网格站位", hero_collection: "角色收集", hero_roles: "英雄分工", infrastructure: "基础设施", interconnected_map: "互联地图", item_build: "装备构筑", jump_control: "跳跃控制", jump_scare: "惊吓触发", lane_control: "兵线控制", lap_competition: "圈速竞争", large_match: "大规模对局", last_team_standing: "最后存活队伍", level_sequence: "关卡序列", limited_resources: "有限资源决策", loadout: "战前配置", local_or_online_multiplayer: "本地或在线多人", loot_extraction: "携带战利品撤离", loot_hunt: "战利品追求", loot_search: "搜索物资", loss_on_death: "死亡损失", match_rules: "比赛规则", matchmaking: "匹配", merge_items: "物品合成", minigames: "小游戏组合", mission_objective: "任务目标", move_list: "招式表", movement_challenge: "移动挑战", note_chart: "音符谱面", offline_rewards: "离线收益", open_ended_goals: "开放目标", open_world_exploration: "开放世界探索", optimization: "经营优化", party_members: "队伍成员", performance_score: "表现评分", permadeath: "单局死亡重置", player_agency: "玩家自主选择", population_management: "人口管理", power_growth: "战力成长", precision_timing: "精确时机", problem_solving: "问题求解", production_chain: "生产链", pvpve: "玩家与环境混合对抗", quest_progression: "任务推进", race_track: "赛道", raid_session: "突袭对局", randomized_builds: "随机构筑", reading_progression: "阅读推进", real_time_combat: "即时战斗", resource_flow: "资源流转", resource_gathering: "资源采集", resource_management: "资源管理", round_match: "回合对战", rule_learning: "规则学习", run_based: "单局跑局", season_progression: "赛季进程", short_round: "短回合", short_session: "短时体验", shrinking_zone: "安全区收缩", simple_controls: "简单操作", skill_build: "技能构筑", skill_timing: "技能时机", social_reaction: "社交反应", song_selection: "歌曲选择", spacing: "距离控制", staff_management: "人员管理", stamina_combat: "精力战斗", story_chapters: "剧情章节", survival_meter: "生存指标", system_simulation: "系统模拟", task_order: "任务排序", team_control: "队伍控制", team_objective: "团队目标", teamfight: "团战", technology_tree: "科技树", tension_cycle: "紧张与缓解循环", terrain_use: "地形利用", threat_avoidance: "威胁躲避", time_trial: "计时挑战", turn_based_combat: "回合战斗", turn_order: "行动顺序", unit_roles: "单位分工", vehicle_control: "载具操控", vehicle_tuning: "载具改装", zoning: "区域规划", elemental_fusion: "元素融合", dynamic_enemy_response: "敌人动态响应", stat_upgrade: "数值升级", macro_intervention: "宏观干预", autonomous_civilization: "文明自主演化", explainable_history_chain: "可解释历史因果链" }; // SPDX-License-Identifier: MIT | 将知识库常规机制和常见创新机制翻译为新手可理解的中文。
-const internalNames = { critical_fields_complete: "关键信息完整", core_loop_defined: "核心循环已定义", stage_evidence_consistent: "制作阶段与证据一致", basic_product_feasibility: "产品基本可实现", basic_feasibility: "产品基本可实现", cash: "资金", people: "团队能力", production: "制作资源", external_services: "外部服务", P0: "立即处理", P1: "下一阶段前处理", P2: "后续优化", L1: "入门能力", L2: "可独立执行", L3: "熟练负责", L4: "专家能力" }; // SPDX-License-Identifier: MIT | 将硬门槛、资源类别、优先级和能力等级内部代码转换为中文。
-function genreName(genreId) { const profile = state.knowledgeBase.profiles.find((item) => item.genre_id === genreId); return profile?.display_name || "其他游戏类型"; } // SPDX-License-Identifier: MIT | 优先使用知识库中文类型名并隐藏内部代码。
-function featureName(featureId) { return featureNames[String(featureId)] || (String(featureId).includes("_") ? "项目自定义机制" : String(featureId)); } // SPDX-License-Identifier: MIT | 将机制代码转换为中文并对未知内部代码安全降级。
-function optionName(value, options) { return new Map(options).get(String(value)) || String(value); } // SPDX-License-Identifier: MIT | 将稳定枚举代码转换为中文选项名。
-function innovationAxisName(value) { const stableName = new Map(innovationAxisOptions).get(String(value)); const tokens = String(value).split("_"); const translated = tokens.map((token) => innovationAxisTokens[token]); return stableName || (translated.every(Boolean) ? translated.join("") : "其他关键体验差异"); } // SPDX-License-Identifier: MIT | 将任何已登记创新位置转换为中文并对未知值安全降级而不泄露内部代码。
-function friendlyText(value) { let output = String(value ?? ""); const replacements = { ...dimensionNames, ...internalNames, ...featureNames }; Object.entries(replacements).sort((left, right) => right[0].length - left[0].length).forEach(([code, label]) => { output = output.replaceAll(code, label); }); return output.replaceAll("B_GATE", "进入真人验证候选"); } // SPDX-License-Identifier: MIT | 在新手报告中翻译内部维度、门槛、机制和结论代码。
+const validationMethodOptions = [["playtest", "目标玩家试玩"], ["interview", "玩家访谈"], ["survey", "结构化问卷"], ["telemetry", "行为数据埋点"], ["prototype_comparison", "原型 A/B 对比"], ["market_test", "小规模市场测试"]]; // SPDX-License-Identifier: MIT | 定义差异化验证方式的稳定代码与用户名称。
+const dimensionNames = { core_loop: "核心循环", first_attraction: "首次吸引", sustained_motivation: "持续动机", progression_feedback: "成长反馈", content_structure: "内容结构", social_competition: "社交竞争", value_exchange: "价值交换", feasibility: "可落地性", innovation_candidate: "创新候选" }; // SPDX-License-Identifier: MIT | 将九维代码映射为中文名称。
 function create(tag, className = "", text = "") { // SPDX-License-Identifier: MIT | 创建只使用文本节点的安全 DOM 元素。
     const element = document.createElement(tag); // SPDX-License-Identifier: MIT | 创建指定类型的页面元素。
     if (className) element.className = className; // SPDX-License-Identifier: MIT | 在提供类名时设置样式类。
@@ -73,7 +65,7 @@ connectionForm.addEventListener("submit", async (event) => { // SPDX-License-Ide
         state.questions = questionnaire.questions || []; // SPDX-License-Identifier: MIT | 保存服务端返回的版本化问题列表。
         state.knowledgeBase = knowledgeBase && Array.isArray(knowledgeBase.profiles) ? knowledgeBase : { version: "", profiles: [] }; // SPDX-License-Identifier: MIT | 保存后端签发的类型规则并对异常响应安全降级。
         byId("connectionPill").classList.add("connected"); // SPDX-License-Identifier: MIT | 更新全局连接视觉状态。
-        byId("connectionText").textContent = "评分助手已连接"; // SPDX-License-Identifier: MIT | 面向新手只显示连接结果并隐藏内部服务版本。
+        byId("connectionText").textContent = `Agent ${health.version} 已连接`; // SPDX-License-Identifier: MIT | 显示已验证服务版本。
         unlock("upload"); // SPDX-License-Identifier: MIT | 开放资料上传步骤。
         renderQuestions(); // SPDX-License-Identifier: MIT | 预先渲染空问卷方便创作者查看结构。
         showToast(`连接成功，已读取 ${state.questions.length} 个问题和 ${state.knowledgeBase.profiles.length} 个类型规则。`); // SPDX-License-Identifier: MIT | 播报前后端两个合同都已加载。
@@ -188,8 +180,8 @@ function commitGuidedObject(container, answer, value, jsonEditor) { // SPDX-Lice
 } // SPDX-License-Identifier: MIT | 结束有效对象提交助手。
 function addAdvancedJsonEditor(container, question, answer, syncSimple) { // SPDX-License-Identifier: MIT | 为专业用户添加可展开 JSON 编辑能力。
     const details = create("details", "advanced-json"); // SPDX-License-Identifier: MIT | 创建默认折叠的渐进披露容器。
-    const summary = create("summary", "", "专业团队数据格式（新手无需打开）"); // SPDX-License-Identifier: MIT | 使用中文说明并保持技术参数默认折叠。
-    const hint = create("p", "editor-hint", "只适合需要批量导入数据的专业团队；修改后会同步到上方简单表单。"); // SPDX-License-Identifier: MIT | 用新手能理解的语言解释高级编辑器用途。
+    const summary = create("summary", "", "专业模式：查看或编辑 JSON"); // SPDX-License-Identifier: MIT | 提供清晰的高级模式入口。
+    const hint = create("p", "editor-hint", "适合已有数据规范的团队；修改后会同步到上方快速表单。"); // SPDX-License-Identifier: MIT | 解释高级编辑器用途与同步行为。
     const textarea = create("textarea", "json-editor"); // SPDX-License-Identifier: MIT | 创建专业 JSON 多行编辑器。
     const error = create("p", "editor-error"); // SPDX-License-Identifier: MIT | 创建就近显示的 JSON 格式错误区域。
     textarea.value = formatAnswerValue(question, answer.value); // SPDX-License-Identifier: MIT | 回显已有结构化答案。
@@ -229,7 +221,7 @@ function innovationAxisChoicesForCurrentGenres() { // SPDX-License-Identifier: M
     const genreIds = new Set(Array.isArray(state.answers.genre_ids?.value) ? state.answers.genre_ids.value : []); // SPDX-License-Identifier: MIT | 读取当前已选择的游戏类型代码。
     const axes = state.knowledgeBase.profiles.filter((profile) => genreIds.has(profile.genre_id)).flatMap((profile) => profile.innovation_axes || []); // SPDX-License-Identifier: MIT | 汇总后端为所选类型登记的创新验证位置。
     const uniqueAxes = [...new Set(axes)]; // SPDX-License-Identifier: MIT | 去除混合类型间重复的创新位置。
-    return (uniqueAxes.length ? uniqueAxes : innovationAxisOptions.map(([value]) => value)).map((value) => [value, labels.get(value) || innovationAxisName(value)]); // SPDX-License-Identifier: MIT | 优先展示类型相关位置并将所有未知显示代码翻译为中文名称。
+    return (uniqueAxes.length ? uniqueAxes : innovationAxisOptions.map(([value]) => value)).map((value) => [value, labels.get(value) || value.replaceAll("_", " ")]); // SPDX-License-Identifier: MIT | 优先展示类型相关位置并为专业代码提供安全降级名称。
 } // SPDX-License-Identifier: MIT | 结束类型相关创新位置选项生成函数。
 function buildGenreEditor(question, answer) { // SPDX-License-Identifier: MIT | 使用后端知识库构建可多选游戏类型编辑器。
     const container = create("div", "guided-editor knowledge-editor"); // SPDX-License-Identifier: MIT | 创建类型知识库引导式编辑器根容器。
@@ -245,7 +237,7 @@ function buildGenreEditor(question, answer) { // SPDX-License-Identifier: MIT | 
         input.type = "checkbox"; // SPDX-License-Identifier: MIT | 允许混合类型项目选择多个类型。
         input.value = String(profile.genre_id || ""); // SPDX-License-Identifier: MIT | 使用后端签发的稳定类型代码。
         input.checked = selected.has(input.value); // SPDX-License-Identifier: MIT | 回显当前已选择类型。
-        text.append(create("strong", "", profile.display_name || "其他游戏类型")); // SPDX-License-Identifier: MIT | 新手界面只显示中文类型名，稳定代码保留在提交值中。
+        text.append(create("strong", "", profile.display_name || input.value), create("small", "", input.value)); // SPDX-License-Identifier: MIT | 同时显示中文类型名和稳定代码。
         inputs.set(input.value, input); // SPDX-License-Identifier: MIT | 登记复选框供数量限制和答案收集。
         label.append(input, text); // SPDX-License-Identifier: MIT | 组合可访问类型复选项。
         grid.append(label); // SPDX-License-Identifier: MIT | 将类型卡片加入网格。
@@ -257,23 +249,20 @@ function buildGenreEditor(question, answer) { // SPDX-License-Identifier: MIT | 
         renderQuestions(); // SPDX-License-Identifier: MIT | 重新生成依赖类型的玩法机制和创新位置控件并保留统一答案状态。
     }; // SPDX-License-Identifier: MIT | 结束类型答案提交函数。
     inputs.forEach((input) => input.addEventListener("change", () => commit(input))); // SPDX-License-Identifier: MIT | 在每个类型选择变化时同步答案。
-    fieldset.append(create("legend", "", "选择 1-3 个最符合的游戏类型"), create("p", "editor-hint", "混合类型可以多选；请先选择最主要的类型。"), grid); // SPDX-License-Identifier: MIT | 新手界面隐藏知识库版本并保留必要选择说明。
+    fieldset.append(create("legend", "", "选择 1-3 个最具体的游戏类型"), create("p", "editor-hint", `规则来源：${state.knowledgeBase.version || "未加载"}；混合类型可以多选，主类型放在最前。`), grid); // SPDX-License-Identifier: MIT | 展示知识库版本和选择说明。
     container.append(createGuidedHeader("从评分知识库选择类型", "选择后，下一题会自动给出该类型的常规机制和高密度组合提示。"), fieldset); // SPDX-License-Identifier: MIT | 组合类型知识库编辑器。
     return container; // SPDX-License-Identifier: MIT | 返回类型引导式编辑器。
 } // SPDX-License-Identifier: MIT | 结束类型知识库编辑器构造函数。
 function buildGameplayFeatureEditor(question, answer) { // SPDX-License-Identifier: MIT | 将类型基线候选和自由机制列表耦合为一个结构化编辑器。
     const container = create("div", "guided-editor knowledge-editor"); // SPDX-License-Identifier: MIT | 创建玩法机制知识库编辑器根容器。
     const suggestions = create("div", "feature-suggestions"); // SPDX-License-Identifier: MIT | 创建由所选类型动态生成的机制候选区。
-    const customInput = create("textarea"); // SPDX-License-Identifier: MIT | 创建只填写项目自定义中文机制的输入框。
-    const selected = new Set((Array.isArray(answer.value) ? answer.value : []).filter((value) => Object.hasOwn(featureNames, value))); // SPDX-License-Identifier: MIT | 将知识库已知机制保存为内部选择状态而不在新手界面显示代码。
-    const initialCustom = (Array.isArray(answer.value) ? answer.value : []).filter((value) => !Object.hasOwn(featureNames, value)); // SPDX-License-Identifier: MIT | 将知识库外机制作为创作者自定义中文内容回显。
-    customInput.id = "answer-gameplay_features"; // SPDX-License-Identifier: MIT | 保留稳定元素标识供测试和辅助技术使用。
-    customInput.value = initialCustom.join("\n"); // SPDX-License-Identifier: MIT | 回显项目自定义机制而不暴露内部英文代码。
-    customInput.placeholder = "补充项目独有玩法，每行一项；例如：棋子自主演化、因果链复盘"; // SPDX-License-Identifier: MIT | 使用中文自然语言提示补充独有机制。
-    customInput.setAttribute("aria-label", "补充项目独有玩法"); // SPDX-License-Identifier: MIT | 为自定义机制输入提供新手可理解的名称。
-    const customValues = () => customInput.value.split(/\r?\n|，|,/).map((item) => item.trim()).filter(Boolean); // SPDX-License-Identifier: MIT | 将中文换行或逗号输入转换为稳定列表。
-    const currentValues = () => [...selected, ...customValues()]; // SPDX-License-Identifier: MIT | 合并内部知识库选择与创作者自定义机制用于提交。
-    const commit = () => markGuidedAnswerEdited(container, answer, currentValues()); // SPDX-License-Identifier: MIT | 将合并后的机制列表同步到统一答案信封。
+    const textarea = create("textarea"); // SPDX-License-Identifier: MIT | 创建允许补充知识库外机制的列表输入框。
+    textarea.id = "answer-gameplay_features"; // SPDX-License-Identifier: MIT | 提供稳定元素标识供测试和辅助技术使用。
+    textarea.value = formatAnswerValue(question, answer.value); // SPDX-License-Identifier: MIT | 回显已有玩法机制列表。
+    textarea.placeholder = "每行一个实际机制代码；可先点击上方类型基线，再补充项目独有机制。"; // SPDX-License-Identifier: MIT | 说明快捷候选与自由输入的组合方式。
+    textarea.setAttribute("aria-label", question.prompt); // SPDX-License-Identifier: MIT | 为机制列表提供可访问名称。
+    const currentValues = () => parseInputValue(question, textarea.value); // SPDX-License-Identifier: MIT | 将文本框稳定解析为后端列表合同。
+    const commit = () => markGuidedAnswerEdited(container, answer, currentValues()); // SPDX-License-Identifier: MIT | 将机制列表同步到统一答案信封。
     const renderSuggestions = () => { // SPDX-License-Identifier: MIT | 按当前类型选择重新生成常规机制和拥挤组合提示。
         suggestions.replaceChildren(); // SPDX-License-Identifier: MIT | 清除旧类型对应的候选节点。
         const genreIds = new Set(Array.isArray(state.answers.genre_ids?.value) ? state.answers.genre_ids.value : []); // SPDX-License-Identifier: MIT | 读取当前已确认前的类型选择状态。
@@ -283,21 +272,23 @@ function buildGameplayFeatureEditor(question, answer) { // SPDX-License-Identifi
         const crowded = profiles.flatMap((profile) => profile.crowded_patterns || []); // SPDX-License-Identifier: MIT | 汇总所选类型的高密度机制组合。
         const buttonRow = create("div", "quick-actions feature-buttons"); // SPDX-License-Identifier: MIT | 创建常规机制快捷按钮区。
         baseline.forEach((featureId) => { // SPDX-License-Identifier: MIT | 为每项类型常规机制创建可切换按钮。
-            const button = createQuickButton(featureName(featureId), () => { // SPDX-License-Identifier: MIT | 使用中文机制名创建将机制加入或移出答案的快捷操作。
-                if (selected.has(featureId)) selected.delete(featureId); else selected.add(featureId); // SPDX-License-Identifier: MIT | 在内部选择状态中切换常规机制而不暴露代码。
+            const button = createQuickButton(featureId, () => { // SPDX-License-Identifier: MIT | 创建将机制加入或移出答案的快捷操作。
+                const values = new Set(currentValues()); // SPDX-License-Identifier: MIT | 读取点击前的全部实际机制。
+                if (values.has(featureId)) values.delete(featureId); else values.add(featureId); // SPDX-License-Identifier: MIT | 切换常规机制是否真实存在于项目中。
+                textarea.value = [...values].sort().join("\n"); // SPDX-License-Identifier: MIT | 将更新后的稳定列表回显到文本框。
                 commit(); // SPDX-License-Identifier: MIT | 同步更新后的结构化机制答案。
                 renderSuggestions(); // SPDX-License-Identifier: MIT | 更新按钮选中状态和组合提示。
             }); // SPDX-License-Identifier: MIT | 结束机制按钮切换逻辑。
-            if (selected.has(featureId)) button.classList.add("selected"); // SPDX-License-Identifier: MIT | 对已选择机制显示明确选中状态。
+            if (currentValues().includes(featureId)) button.classList.add("selected"); // SPDX-License-Identifier: MIT | 对已存在机制显示明确选中状态。
             buttonRow.append(button); // SPDX-License-Identifier: MIT | 将机制按钮加入候选区。
         }); // SPDX-License-Identifier: MIT | 结束常规机制候选遍历。
-        const crowdedText = crowded.length ? crowded.map((pattern) => pattern.map(featureName).join(" + ")).join("；") : "当前类型没有登记常见的高同质化组合"; // SPDX-License-Identifier: MIT | 将拥挤机制组合翻译为创作者可读中文提示。
+        const crowdedText = crowded.length ? crowded.map((pattern) => pattern.join(" + ")).join("；") : "当前类型未登记高密度组合"; // SPDX-License-Identifier: MIT | 将拥挤机制组合转换为创作者可读提示。
         suggestions.append(create("strong", "", "点击选择项目实际采用的类型常规机制"), buttonRow, create("p", "editor-note", `高同质化组合提示：${crowdedText}`)); // SPDX-License-Identifier: MIT | 同时展示基线选择与同质化风险组合。
     }; // SPDX-License-Identifier: MIT | 结束机制候选渲染函数。
     suggestions.id = "knowledgeFeatureSuggestions"; // SPDX-License-Identifier: MIT | 提供跨问题刷新使用的稳定容器标识。
     suggestions.refreshSuggestions = renderSuggestions; // SPDX-License-Identifier: MIT | 登记仅作用于当前编辑器的刷新函数。
-    customInput.addEventListener("input", commit); // SPDX-License-Identifier: MIT | 在中文自定义机制变化时同步答案。
-    container.append(createGuidedHeader("选择已有玩法，再补充项目独有玩法", "常规玩法本身不扣分；系统会结合具体差异和验证证据判断同质化风险。"), suggestions, customInput); // SPDX-License-Identifier: MIT | 组合中文类型基线与自然语言自定义机制输入。
+    textarea.addEventListener("input", () => { commit(); renderSuggestions(); }); // SPDX-License-Identifier: MIT | 在自由输入变化时同步答案和快捷按钮状态。
+    container.append(createGuidedHeader("按类型基线核对实际玩法", "常规机制不是扣分项；只有把常规机制包装成创新、或完整命中拥挤组合却没有差异证据时才降低创新分。"), suggestions, textarea); // SPDX-License-Identifier: MIT | 组合类型基线、风险提示和自由机制输入。
     renderSuggestions(); // SPDX-License-Identifier: MIT | 首次渲染当前类型对应的机制候选。
     return container; // SPDX-License-Identifier: MIT | 返回玩法机制知识库编辑器。
 } // SPDX-License-Identifier: MIT | 结束玩法机制知识库编辑器构造函数。
@@ -314,7 +305,7 @@ function buildKnowledgeOptionEditor(question, answer, options, title, hint) { //
         input.type = "checkbox"; // SPDX-License-Identifier: MIT | 允许选择多个创新位置或验证方式。
         input.value = value; // SPDX-License-Identifier: MIT | 保存稳定后端代码。
         input.checked = current.has(value); // SPDX-License-Identifier: MIT | 回显当前值。
-        text.append(document.createTextNode(labelText)); // SPDX-License-Identifier: MIT | 新手界面只展示中文名称，稳定代码保留在控件值中。
+        text.append(document.createTextNode(labelText), create("small", "", value)); // SPDX-License-Identifier: MIT | 展示中文名称和可审计代码。
         inputs.set(value, input); // SPDX-License-Identifier: MIT | 登记复选框供答案收集。
         label.append(input, text); // SPDX-License-Identifier: MIT | 组合完整复选项。
         grid.append(label); // SPDX-License-Identifier: MIT | 将选项加入网格。
@@ -325,71 +316,6 @@ function buildKnowledgeOptionEditor(question, answer, options, title, hint) { //
     container.append(fieldset); // SPDX-License-Identifier: MIT | 将枚举复选组加入编辑器。
     return container; // SPDX-License-Identifier: MIT | 返回知识库枚举编辑器。
 } // SPDX-License-Identifier: MIT | 结束知识库枚举编辑器构造函数。
-function buildProgressionFeedbackEditor(question, answer) { // SPDX-License-Identifier: MIT | 构建不偏向局外成长的分层成长反馈编辑器。
-    const container = create("div", "guided-editor"); // SPDX-License-Identifier: MIT | 创建成长反馈引导式编辑器根容器。
-    const current = answer.value && typeof answer.value === "object" && !Array.isArray(answer.value) ? answer.value : {}; // SPDX-License-Identifier: MIT | 安全读取已有结构化成长反馈。
-    const modeLabel = create("label", "guided-field guided-wide"); // SPDX-License-Identifier: MIT | 创建成长时间尺度选择标签。
-    const modeSelect = create("select"); // SPDX-License-Identifier: MIT | 创建局内、局外、混合或无成长选择器。
-    const grid = create("div", "guided-grid"); // SPDX-License-Identifier: MIT | 创建分层成长机制输入网格。
-    const inMatchInput = create("textarea"); // SPDX-License-Identifier: MIT | 创建单局内成长机制列表输入。
-    const metaInput = create("textarea"); // SPDX-License-Identifier: MIT | 创建局间或长期成长机制列表输入。
-    const signalsInput = create("textarea"); // SPDX-License-Identifier: MIT | 创建反馈信号列表输入。
-    const tradeoffsInput = create("textarea"); // SPDX-License-Identifier: MIT | 创建成长选择与取舍说明输入。
-    const failureInput = create("textarea"); // SPDX-License-Identifier: MIT | 创建失败学习与复盘说明输入。
-    let jsonEditor = null; // SPDX-License-Identifier: MIT | 保存成长反馈专业 JSON 编辑器引用。
-    modeSelect.append(new Option("请选择", ""), new Option("主要发生在单局内", "in_match"), new Option("主要发生在局间/局外", "meta"), new Option("局内与局外都有", "hybrid"), new Option("没有数值成长，但有技能学习", "none")); // SPDX-License-Identifier: MIT | 提供覆盖 RTS、Roguelite、RPG 和纯技巧游戏的时间尺度。
-    modeSelect.id = "answer-progression-mode"; // SPDX-License-Identifier: MIT | 提供成长时间尺度稳定控件标识。
-    inMatchInput.id = "answer-progression-in-match"; // SPDX-License-Identifier: MIT | 提供局内成长稳定控件标识。
-    metaInput.id = "answer-progression-meta"; // SPDX-License-Identifier: MIT | 提供局外成长稳定控件标识。
-    signalsInput.id = "answer-progression-signals"; // SPDX-License-Identifier: MIT | 提供成长反馈信号稳定控件标识。
-    tradeoffsInput.id = "answer-progression-tradeoffs"; // SPDX-License-Identifier: MIT | 提供成长取舍稳定控件标识。
-    failureInput.id = "answer-progression-failure"; // SPDX-License-Identifier: MIT | 提供失败学习稳定控件标识。
-    modeSelect.value = typeof current.mode === "string" ? current.mode : ""; // SPDX-License-Identifier: MIT | 回显当前成长时间尺度。
-    inMatchInput.value = Array.isArray(current.in_match_progression) ? current.in_match_progression.join("\n") : ""; // SPDX-License-Identifier: MIT | 回显局内经济、科技、兵力或构筑进程。
-    metaInput.value = Array.isArray(current.meta_progression) ? current.meta_progression.join("\n") : ""; // SPDX-License-Identifier: MIT | 回显局间解锁或长期进程。
-    signalsInput.value = Array.isArray(current.feedback_signals) ? current.feedback_signals.join("\n") : ""; // SPDX-License-Identifier: MIT | 回显视觉、音频、数值或状态反馈。
-    tradeoffsInput.value = typeof current.decision_tradeoffs === "string" ? current.decision_tradeoffs : ""; // SPDX-License-Identifier: MIT | 回显成长选择如何影响策略。
-    failureInput.value = typeof current.failure_learning === "string" ? current.failure_learning : ""; // SPDX-License-Identifier: MIT | 回显失败、回退和复盘机制。
-    [[inMatchInput, "单局内成长（每行一项）", "例如：采集资源、扩张基地、科技升级、单位解锁、地图控制"], [metaInput, "局间/局外成长（没有可留空）", "例如：角色解锁、永久能力、剧情章节、账号等级"], [signalsInput, "玩家怎样感知成长（每行一项）", "例如：新单位可用、建筑外观变化、伤害反馈、地图优势、因果报告"], [tradeoffsInput, "成长如何改变选择或产生取舍？", "例如：先升科技会牺牲当前兵力，但打开新的战术路线"], [failureInput, "失败后怎样理解原因并调整？", "例如：战报、回放、伤害来源、资源曲线或重试提示"]].forEach(([input, labelText, placeholder]) => { const label = create("label", "guided-field"); input.placeholder = placeholder; label.append(create("span", "", labelText), input); grid.append(label); }); // SPDX-License-Identifier: MIT | 为不同类型游戏提供对应证据入口而不强迫填写局外成长。
-    modeLabel.append(create("span", "", "成长反馈主要发生在哪里？"), modeSelect, create("small", "", "即时战略可选“单局内”；没有局外成长不会因此扣分。")); // SPDX-License-Identifier: MIT | 明确 RTS 等游戏的局内成长属于完整成长反馈。
-    const listValue = (input) => input.value.split(/\r?\n|，|,/).map((item) => item.trim()).filter(Boolean); // SPDX-License-Identifier: MIT | 将换行或逗号输入转换为稳定字符串列表。
-    const collect = () => ({ mode: modeSelect.value || "unknown", in_match_progression: listValue(inMatchInput), meta_progression: listValue(metaInput), feedback_signals: listValue(signalsInput), decision_tradeoffs: tradeoffsInput.value.trim(), failure_learning: failureInput.value.trim() }); // SPDX-License-Identifier: MIT | 将快速表单转换为后端分层成长反馈合同。
-    const commit = () => commitGuidedObject(container, answer, collect(), jsonEditor); // SPDX-License-Identifier: MIT | 提交当前分层成长反馈对象。
-    [modeSelect, inMatchInput, metaInput, signalsInput, tradeoffsInput, failureInput].forEach((input) => input.addEventListener(input === modeSelect ? "change" : "input", commit)); // SPDX-License-Identifier: MIT | 在任一成长反馈字段变化时同步答案。
-    container.append(createGuidedHeader("分别描述局内与局外成长", "评分看所选时间尺度中的成长机制、反馈信号、策略取舍和失败学习，不按字数，也不默认要求局外系统。"), modeLabel, grid); // SPDX-License-Identifier: MIT | 组合成长反馈的新手路径。
-    const syncSimple = (value) => { modeSelect.value = typeof value.mode === "string" ? value.mode : ""; inMatchInput.value = Array.isArray(value.in_match_progression) ? value.in_match_progression.join("\n") : ""; metaInput.value = Array.isArray(value.meta_progression) ? value.meta_progression.join("\n") : ""; signalsInput.value = Array.isArray(value.feedback_signals) ? value.feedback_signals.join("\n") : ""; tradeoffsInput.value = typeof value.decision_tradeoffs === "string" ? value.decision_tradeoffs : ""; failureInput.value = typeof value.failure_learning === "string" ? value.failure_learning : ""; }; // SPDX-License-Identifier: MIT | 将专业 JSON 反向同步到分层成长快速控件。
-    jsonEditor = addAdvancedJsonEditor(container, question, answer, syncSimple); // SPDX-License-Identifier: MIT | 添加成长反馈专业 JSON 编辑入口。
-    return container; // SPDX-License-Identifier: MIT | 返回分层成长反馈编辑器。
-} // SPDX-License-Identifier: MIT | 结束分层成长反馈编辑器构造函数。
-function buildProductionFeasibilityEditor(question, answer) { // SPDX-License-Identifier: MIT | 构建与当前团队资金分离的产品可实现性编辑器。
-    const container = create("div", "guided-editor"); // SPDX-License-Identifier: MIT | 创建产品可实现性引导式编辑器根容器。
-    const current = answer.value && typeof answer.value === "object" && !Array.isArray(answer.value) ? answer.value : {}; // SPDX-License-Identifier: MIT | 安全读取已有产品可实现性对象。
-    const checksGrid = create("div", "choice-grid"); // SPDX-License-Identifier: MIT | 创建四类实现证据复选区域。
-    const listGrid = create("div", "guided-grid"); // SPDX-License-Identifier: MIT | 创建依赖和风险列表输入区域。
-    const checkDefinitions = [["scope_bounded", "首发范围有明确上限"], ["technical_path_known", "主要技术路径已明确"], ["platform_constraints_known", "目标平台约束已核对"], ["prototype_validation_plan", "关键未知有原型验证计划"]]; // SPDX-License-Identifier: MIT | 定义不涉及当前人数和资金的四项可实现性证据。
-    const checkInputs = new Map(); // SPDX-License-Identifier: MIT | 保存产品可实现性代码到复选框的映射。
-    const dependenciesInput = create("textarea"); // SPDX-License-Identifier: MIT | 创建关键外部依赖列表输入。
-    const risksInput = create("textarea"); // SPDX-License-Identifier: MIT | 创建未解决高风险列表输入。
-    const blockersInput = create("textarea"); // SPDX-License-Identifier: MIT | 创建明确硬阻断列表输入。
-    let jsonEditor = null; // SPDX-License-Identifier: MIT | 保存产品可实现性专业 JSON 编辑器引用。
-    checkDefinitions.forEach(([key, labelText]) => { const label = create("label", "choice-option"); const input = create("input"); input.type = "checkbox"; input.id = `answer-production-${key.replaceAll("_", "-")}`; input.checked = current[key] === true; checkInputs.set(key, input); label.append(input, create("span", "", labelText)); checksGrid.append(label); }); // SPDX-License-Identifier: MIT | 创建带稳定标识的范围、技术、平台和验证四项可核对证据。
-    dependenciesInput.id = "answer-production-dependencies"; // SPDX-License-Identifier: MIT | 提供关键依赖稳定控件标识。
-    risksInput.id = "answer-production-risks"; // SPDX-License-Identifier: MIT | 提供未解决高风险稳定控件标识。
-    blockersInput.id = "answer-production-blockers"; // SPDX-License-Identifier: MIT | 提供硬阻断稳定控件标识。
-    dependenciesInput.value = Array.isArray(current.critical_dependencies) ? current.critical_dependencies.join("\n") : ""; // SPDX-License-Identifier: MIT | 回显引擎、第三方服务或外部内容依赖。
-    risksInput.value = Array.isArray(current.unresolved_high_risks) ? current.unresolved_high_risks.join("\n") : ""; // SPDX-License-Identifier: MIT | 回显性能、规模、算法或内容产能高风险。
-    blockersInput.value = Array.isArray(current.blocking_constraints) ? current.blocking_constraints.join("\n") : ""; // SPDX-License-Identifier: MIT | 回显无法绕过的物理、平台或政策阻断。
-    [[dependenciesInput, "关键依赖（每行一项）", "例如：引擎大规模单位性能、第三方服务器、授权内容；没有可留空"], [risksInput, "尚未解决的高风险（每行一项）", "例如：千单位同屏性能尚未验证；没有可留空"], [blockersInput, "当前方案的明确硬阻断（每行一项）", "只有确定无法绕过时才填；普通缺团队或缺资金不要填在这里"]].forEach(([input, labelText, placeholder]) => { const label = create("label", "guided-field"); input.placeholder = placeholder; label.append(create("span", "", labelText), input); listGrid.append(label); }); // SPDX-License-Identifier: MIT | 将依赖、高风险和硬阻断清楚分开。
-    const listValue = (input) => input.value.split(/\r?\n|，|,/).map((item) => item.trim()).filter(Boolean); // SPDX-License-Identifier: MIT | 将多行实现风险输入转换为稳定列表。
-    const collect = () => ({ ...Object.fromEntries([...checkInputs].map(([key, input]) => [key, input.checked])), critical_dependencies: listValue(dependenciesInput), unresolved_high_risks: listValue(risksInput), blocking_constraints: listValue(blockersInput) }); // SPDX-License-Identifier: MIT | 将快速表单转换为产品可实现性合同。
-    const commit = () => commitGuidedObject(container, answer, collect(), jsonEditor); // SPDX-License-Identifier: MIT | 提交当前产品可实现性对象。
-    checkInputs.forEach((input) => input.addEventListener("change", commit)); // SPDX-License-Identifier: MIT | 在任一实现证据变化时同步答案。
-    [dependenciesInput, risksInput, blockersInput].forEach((input) => input.addEventListener("input", commit)); // SPDX-License-Identifier: MIT | 在依赖或风险变化时同步答案。
-    container.append(createGuidedHeader("只判断游戏本身能不能做出来", "请假设能获得合适团队与足够资金；当前缺人、缺钱会进入下方资源缺口报告，不会降低这一维分数。"), checksGrid, listGrid); // SPDX-License-Identifier: MIT | 明确产品可实现性与资源准备度的边界。
-    const syncSimple = (value) => { checkInputs.forEach((input, key) => { input.checked = value[key] === true; }); dependenciesInput.value = Array.isArray(value.critical_dependencies) ? value.critical_dependencies.join("\n") : ""; risksInput.value = Array.isArray(value.unresolved_high_risks) ? value.unresolved_high_risks.join("\n") : ""; blockersInput.value = Array.isArray(value.blocking_constraints) ? value.blocking_constraints.join("\n") : ""; }; // SPDX-License-Identifier: MIT | 将专业 JSON 反向同步到产品可实现性快速控件。
-    jsonEditor = addAdvancedJsonEditor(container, question, answer, syncSimple); // SPDX-License-Identifier: MIT | 添加产品可实现性专业 JSON 编辑入口。
-    return container; // SPDX-License-Identifier: MIT | 返回产品可实现性编辑器。
-} // SPDX-License-Identifier: MIT | 结束产品可实现性编辑器构造函数。
 function buildTeamEditor(question, answer) { // SPDX-License-Identifier: MIT | 构建适合个人与专业团队的团队情况编辑器。
     const container = create("div", "guided-editor"); // SPDX-License-Identifier: MIT | 创建团队引导式编辑器根容器。
     const current = answer.value && typeof answer.value === "object" && !Array.isArray(answer.value) ? answer.value : {}; // SPDX-License-Identifier: MIT | 安全读取已有团队对象。
@@ -451,7 +377,7 @@ function buildScheduleEditor(question, answer) { // SPDX-License-Identifier: MIT
     planningStatusOptions.forEach(([value, label]) => statusSelect.append(new Option(label, value))); // SPDX-License-Identifier: MIT | 添加中文计划成熟度选项。
     statusSelect.value = typeof current.planning_status === "string" ? current.planning_status : ""; // SPDX-License-Identifier: MIT | 回显已有计划成熟度。
     [[monthsInput, "开发周期（月）", current.months, "例如：12"], [budgetInput, "计划总预算（元）", current.budget, "不知道可留空"], [fundingInput, "已落实资金（元）", current.available_funding, "没有资金填 0"]].forEach(([input, labelText, value, placeholder]) => { input.type = "number"; input.min = "0"; input.step = "1"; input.value = typeof value === "number" && Number.isFinite(value) ? String(value) : ""; input.placeholder = placeholder; const label = create("label", "guided-field"); label.append(create("span", "", labelText), input); grid.append(label); }); // SPDX-License-Identifier: MIT | 配置周期、预算和资金字段并加入网格。
-    statusLabel.append(create("span", "", "目前的计划状态"), statusSelect, create("small", "", "尚未规划也可以正常提交，评分助手会把它列为待补项。")); // SPDX-License-Identifier: MIT | 组合计划状态字段和纯中文新手说明。
+    statusLabel.append(create("span", "", "目前的计划状态"), statusSelect, create("small", "", "尚未规划也可以正常提交，Agent 会把它识别为待补项。")); // SPDX-License-Identifier: MIT | 组合计划状态字段和新手说明。
     const numberOrNull = (input) => input.value === "" ? null : Number(input.value); // SPDX-License-Identifier: MIT | 将空数值保留为未知而非错误地转换为零。
     const collect = () => ({ planning_status: statusSelect.value || "not_planned", months: numberOrNull(monthsInput), budget: numberOrNull(budgetInput), available_funding: numberOrNull(fundingInput) }); // SPDX-License-Identifier: MIT | 将快速投入控件转换为后端兼容对象。
     const commit = () => commitGuidedObject(container, answer, collect(), jsonEditor); // SPDX-License-Identifier: MIT | 提交当前投入快速表单对象。
@@ -484,7 +410,7 @@ function buildModuleStatusEditor(question, answer) { // SPDX-License-Identifier:
     const collect = () => Object.fromEntries([...statusSelects].map(([key, select]) => [key, select.value || "missing"])); // SPDX-License-Identifier: MIT | 将模块矩阵转换为完整后端状态对象。
     const commit = () => commitGuidedObject(container, answer, collect(), jsonEditor); // SPDX-License-Identifier: MIT | 提交当前模块状态对象。
     const setStatuses = (values) => { statusSelects.forEach((select, key) => { select.value = values[key] || "missing"; }); commit(); }; // SPDX-License-Identifier: MIT | 应用完整模块预设并立即保存。
-    quick.append(createQuickButton("一键全部暂无", () => setStatuses(Object.fromEntries(moduleDefinitions.map(([key]) => [key, "missing"])))), createQuickButton("套用可玩原型阶段示例", () => setStatuses({ core_design: "documented", prototype: "ready", ux: "planned", art: "planned", audio: "missing", qa: "planned", store_assets: "missing", compliance: "planned" }))); // SPDX-License-Identifier: MIT | 提供新手最常用的空状态与可玩原型状态预设。
+    quick.append(createQuickButton("一键全部暂无", () => setStatuses(Object.fromEntries(moduleDefinitions.map(([key]) => [key, "missing"])))), createQuickButton("套用 Demo 阶段示例", () => setStatuses({ core_design: "documented", prototype: "ready", ux: "planned", art: "planned", audio: "missing", qa: "planned", store_assets: "missing", compliance: "planned" }))); // SPDX-License-Identifier: MIT | 提供新手最常用的空状态与 Demo 状态预设。
     statusSelects.forEach((select) => select.addEventListener("change", commit)); // SPDX-License-Identifier: MIT | 在任一模块状态变化时同步结构化答案。
     container.append(createGuidedHeader("逐项选择制作状态", "没有开始就选“暂无”；只有经过试玩、测试或审核的成果才选“已验证”。"), quick, matrix); // SPDX-License-Identifier: MIT | 组合模块状态编辑器的新手路径。
     const syncSimple = (value) => { statusSelects.forEach((select, key) => { select.value = typeof value[key] === "string" ? value[key] : ""; }); }; // SPDX-License-Identifier: MIT | 将专业模块 JSON 反向同步到状态矩阵。
@@ -495,9 +421,7 @@ function buildQuestionInput(question, answer) { // SPDX-License-Identifier: MIT 
     if (question.question_id === "genre_ids") return buildGenreEditor(question, answer); // SPDX-License-Identifier: MIT | 使用后端类型知识库渲染游戏类型复选项。
     if (question.question_id === "gameplay_features") return buildGameplayFeatureEditor(question, answer); // SPDX-License-Identifier: MIT | 使用所选类型基线辅助填写实际玩法机制。
     if (question.question_id === "innovation_axes") return buildKnowledgeOptionEditor(question, answer, innovationAxisChoicesForCurrentGenres(), "创新发生在哪些设计位置？", "选项来自当前游戏类型的知识库规则；只改题材或美术包装时不要选择核心循环。 "); // SPDX-License-Identifier: MIT | 使用后端类型资料动态生成稳定创新位置代码。
-    if (question.question_id === "validation_methods") return buildKnowledgeOptionEditor(question, answer, validationMethodOptions, "准备怎样验证玩家感受到了差异？", "可多选；没有验证计划时保持为空，评分助手会按未知处理。 "); // SPDX-License-Identifier: MIT | 使用稳定验证方式代码替代自由拼写并隐藏英文产品名。
-    if (question.question_id === "progression_feedback") return buildProgressionFeedbackEditor(question, answer); // SPDX-License-Identifier: MIT | 为成长反馈使用局内、局外和混合模式引导编辑器。
-    if (question.question_id === "production_feasibility") return buildProductionFeasibilityEditor(question, answer); // SPDX-License-Identifier: MIT | 为产品可实现性使用与团队资金分离的引导编辑器。
+    if (question.question_id === "validation_methods") return buildKnowledgeOptionEditor(question, answer, validationMethodOptions, "准备怎样验证玩家感受到了差异？", "可多选；没有验证计划时保持为空，Agent 会按未知处理。 "); // SPDX-License-Identifier: MIT | 使用稳定验证方式代码替代自由拼写。
     if (question.question_id === "team") return buildTeamEditor(question, answer); // SPDX-License-Identifier: MIT | 为第十三题使用团队引导式编辑器。
     if (question.question_id === "schedule") return buildScheduleEditor(question, answer); // SPDX-License-Identifier: MIT | 为第十四题使用投入引导式编辑器。
     if (question.question_id === "module_status") return buildModuleStatusEditor(question, answer); // SPDX-License-Identifier: MIT | 为第十六题使用模块状态矩阵。
@@ -506,7 +430,7 @@ function buildQuestionInput(question, answer) { // SPDX-License-Identifier: MIT 
         input = create("select"); // SPDX-License-Identifier: MIT | 创建枚举选择控件。
         input.append(new Option("请选择", "")); // SPDX-License-Identifier: MIT | 添加未填写占位选项。
         const options = question.question_id === "development_stage" ? stageOptions : businessOptions; // SPDX-License-Identifier: MIT | 选择对应规则枚举集合。
-        options.forEach(([value, label]) => input.append(new Option(label, value))); // SPDX-License-Identifier: MIT | 仅展示自然中文标签并把稳定代码保留在不可见选项值中。
+        options.forEach(([value, label]) => input.append(new Option(`${label} · ${value}`, value))); // SPDX-License-Identifier: MIT | 添加中文标签和稳定代码选项。
         input.value = typeof answer.value === "string" ? answer.value : ""; // SPDX-License-Identifier: MIT | 回显有效字符串枚举答案。
     } else if (question.answer_type === "boolean") { // SPDX-License-Identifier: MIT | 为布尔问题创建三态选择器。
         input = create("select"); // SPDX-License-Identifier: MIT | 创建布尔选择控件。
@@ -548,20 +472,17 @@ function parseInputValue(question, value) { // SPDX-License-Identifier: MIT | �
     return value.trim(); // SPDX-License-Identifier: MIT | 对普通文本去除首尾空白。
 } // SPDX-License-Identifier: MIT | 结束答案解析函数。
 function placeholderFor(question) { // SPDX-License-Identifier: MIT | 为不同题型生成清晰输入说明。
-    if (question.question_id === "genre_ids") return "请选择上方中文游戏类型"; // SPDX-License-Identifier: MIT | 避免向新手展示内部类型代码。
-    if (question.question_id === "gameplay_features") return "每行填写一个实际玩法"; // SPDX-License-Identifier: MIT | 使用中文自然语言说明玩法输入格式。
-    if (question.question_id === "innovation_features") return "每行一个具体变化，例如：元素组合会改变敌人的行为"; // SPDX-License-Identifier: MIT | 用中文实例说明具体创新机制。
-    if (question.question_id === "validation_methods") return "请选择上方中文验证方式"; // SPDX-License-Identifier: MIT | 避免向新手展示内部验证代码。
+    if (question.question_id === "genre_ids") return "每行一个类型代码，例如：\naction_roguelite\ndeckbuilder"; // SPDX-License-Identifier: MIT | 为类型知识库入口提供可复制的稳定代码示例。
+    if (question.question_id === "gameplay_features") return "每行一个实际机制，例如：\nreal_time_combat\nrun_based\nrandomized_builds"; // SPDX-License-Identifier: MIT | 为玩法机制比对提供结构化输入示例。
+    if (question.question_id === "innovation_features") return "每行一个被实际改变的机制，例如：\nelemental_fusion\ndynamic_enemy_response"; // SPDX-License-Identifier: MIT | 防止用户用形容词替代具体创新机制。
+    if (question.question_id === "validation_methods") return "每行一个验证方式，例如：\nplaytest\ntelemetry"; // SPDX-License-Identifier: MIT | 提供知识库支持的验证方式示例。
     if (question.answer_type === "list") return "每行填写一项"; // SPDX-License-Identifier: MIT | 说明列表题输入格式。
     if (question.answer_type === "object") return JSON.stringify(objectExamples[question.question_id] || { note: "请使用 JSON 对象" }, null, 2); // SPDX-License-Identifier: MIT | 提供对象题合法 JSON 示例。
     return "请填写具体、可验证的答案"; // SPDX-License-Identifier: MIT | 提供普通文本题通用提示。
 } // SPDX-License-Identifier: MIT | 结束占位提示函数。
 function sourceName(source) { // SPDX-License-Identifier: MIT | 将答案来源代码转换为中文标签。
-    return { creator: "创作者", ai_prefill: "智能助手代填", document_extract: "方案提取", demo_extract: "可运行版本提取" }[source] || "未知"; // SPDX-License-Identifier: MIT | 返回登记来源名称或未知降级值。
+    return { creator: "创作者", ai_prefill: "AI 代填", document_extract: "文档提取", demo_extract: "Demo 提取" }[source] || "未知"; // SPDX-License-Identifier: MIT | 返回登记来源名称或未知降级值。
 } // SPDX-License-Identifier: MIT | 结束来源名称函数。
-function runStatusName(status) { // SPDX-License-Identifier: MIT | 将运行状态内部代码转换为创作者可理解的中文。
-    return { pending: "等待处理", running: "正在分析", completed: "诊断完成", needs_creator_action: "需要补充资料", failed: "本次诊断未完成" }[status] || "状态暂不可用"; // SPDX-License-Identifier: MIT | 返回登记状态名称并避免直接泄露接口代码。
-} // SPDX-License-Identifier: MIT | 结束运行状态名称函数。
 function hasValue(value) { // SPDX-License-Identifier: MIT | 判断答案是否具有可提交内容。
     if (typeof value === "string") return value.trim().length > 0; // SPDX-License-Identifier: MIT | 纯空白字符串不算已填写。
     if (Array.isArray(value)) return value.length > 0; // SPDX-License-Identifier: MIT | 非空列表算已填写。
@@ -587,7 +508,7 @@ runButton.addEventListener("click", async () => { // SPDX-License-Identifier: MI
     try { // SPDX-License-Identifier: MIT | 捕获提交或评分执行错误。
         const submission = await api("/v1/submissions", { method: "POST", body: JSON.stringify({ project_id: projectId.value.trim(), version: projectVersion.value.trim(), title: projectTitle.value.trim(), artifact_ids: state.artifacts.map((item) => item.artifact_id), questionnaire: state.answers }) }); // SPDX-License-Identifier: MIT | 创建只引用可信资料标识的冻结提交。
         state.submissionId = submission.submission_id; // SPDX-License-Identifier: MIT | 保存不可变提交标识用于状态展示。
-        showToast("答案已提交，评分助手正在生成诊断。 "); // SPDX-License-Identifier: MIT | 用自然中文播报评分运行已开始。
+        showToast("提交已冻结，Agent 正在执行诊断。 "); // SPDX-License-Identifier: MIT | 播报评分运行已开始。
         const run = await api("/v1/runs", { method: "POST", body: JSON.stringify({ submission_id: state.submissionId }) }); // SPDX-License-Identifier: MIT | 创建并同步执行一次评分运行。
         state.runId = run.run_id; // SPDX-License-Identifier: MIT | 保存运行标识用于刷新和审计。
         state.run = run; // SPDX-License-Identifier: MIT | 保存当前运行快照。
@@ -602,7 +523,7 @@ runButton.addEventListener("click", async () => { // SPDX-License-Identifier: MI
     } // SPDX-License-Identifier: MIT | 结束运行异常处理。
 }); // SPDX-License-Identifier: MIT | 结束诊断运行按钮监听器。
 function validateSubmission() { // SPDX-License-Identifier: MIT | 检查提交前端可发现的合同错误。
-    if (!projectId.value.trim() || !projectVersion.value.trim() || !projectTitle.value.trim()) return "请完整填写记录编号、方案版本和项目名称。"; // SPDX-License-Identifier: MIT | 检查冻结提交基础标识。
+    if (!projectId.value.trim() || !projectVersion.value.trim() || !projectTitle.value.trim()) return "请完整填写项目 ID、版本和名称。"; // SPDX-License-Identifier: MIT | 检查冻结提交基础标识。
     if (!state.artifacts.some((item) => ["design_document", "pitch_deck", "spreadsheet"].includes(item.kind))) return "至少上传一份方案文件。"; // SPDX-License-Identifier: MIT | 检查规则要求的方案资料。
     for (const question of state.questions) { // SPDX-License-Identifier: MIT | 遍历问卷执行题型与确认校验。
         const answer = state.answers[question.question_id]; // SPDX-License-Identifier: MIT | 读取当前题目答案信封。
@@ -624,17 +545,16 @@ function renderRun(run) { // SPDX-License-Identifier: MIT | 根据运行状态�
     reportContent.replaceChildren(); // SPDX-License-Identifier: MIT | 清除旧报告内容。
     if (run.status !== "completed" || !run.report) { // SPDX-License-Identifier: MIT | 对未完成或失败运行显示结构化状态。
         const placeholder = create("div", "report-placeholder"); // SPDX-License-Identifier: MIT | 创建运行状态占位区域。
-        const statusName = runStatusName(run.status); // SPDX-License-Identifier: MIT | 读取当前运行状态的中文显示名称。
-        placeholder.append(create("span", "", statusName), create("strong", "", `运行状态：${statusName}`), create("p", "", formatRunError(run.error))); // SPDX-License-Identifier: MIT | 显示状态和创作者可操作错误。
+        placeholder.append(create("span", "", run.status || "?"), create("strong", "", `运行状态：${run.status || "unknown"}`), create("p", "", formatRunError(run.error))); // SPDX-License-Identifier: MIT | 显示状态和创作者可操作错误。
         reportContent.append(placeholder); // SPDX-License-Identifier: MIT | 将状态占位加入报告。
-        showToast(run.status === "needs_creator_action" ? "资料或问卷需要修改，请创建新提交。" : `运行状态：${statusName}`, run.status === "failed"); // SPDX-License-Identifier: MIT | 播报运行终态语义。
+        showToast(run.status === "needs_creator_action" ? "资料或问卷需要修改，请创建新提交。" : `运行状态：${run.status}`, run.status === "failed"); // SPDX-License-Identifier: MIT | 播报运行终态语义。
         return; // SPDX-License-Identifier: MIT | 未完成运行不继续渲染评分报告。
     } // SPDX-License-Identifier: MIT | 结束非完成状态分支。
     renderReport(run.report); // SPDX-License-Identifier: MIT | 渲染完整诊断报告。
     showToast(`诊断完成：${run.report.rating.assessment_result}`); // SPDX-License-Identifier: MIT | 播报最终初筛结论。
 } // SPDX-License-Identifier: MIT | 结束运行渲染函数。
 function formatRunError(error) { // SPDX-License-Identifier: MIT | 将结构化运行错误转换为可读文字。
-    if (!error) return "评分助手正在处理或尚未返回详细信息。"; // SPDX-License-Identifier: MIT | 为无错误详情状态提供纯中文降级说明。
+    if (!error) return "Agent 正在处理或尚未返回详细信息。"; // SPDX-License-Identifier: MIT | 为无错误详情状态提供降级说明。
     if (Array.isArray(error.issues)) return error.issues.join("；"); // SPDX-License-Identifier: MIT | 合并待创作者行动问题列表。
     return error.message || error.code || JSON.stringify(error); // SPDX-License-Identifier: MIT | 选择明确错误说明或结构化降级文本。
 } // SPDX-License-Identifier: MIT | 结束运行错误格式化。
@@ -643,37 +563,31 @@ function renderReport(report) { // SPDX-License-Identifier: MIT | 使用安全 D
     const hero = create("section", "report-hero"); // SPDX-License-Identifier: MIT | 创建评分结论摘要区。
     const badge = create("div", "rating-badge", rating.assessment_result || "?"); // SPDX-License-Identifier: MIT | 显示初筛等级而不冒充 BAS 分数。
     const summary = create("div"); // SPDX-License-Identifier: MIT | 创建评分文字摘要容器。
-    summary.append(create("h3", "", reportTitle(rating.assessment_result)), create("p", "", `项目 ${rating.project_id || "-"} · 版本 ${rating.project_version || "-"}`)); // SPDX-License-Identifier: MIT | 新手摘要只显示项目和版本，内部规则版本移入折叠信息。
+    summary.append(create("h3", "", reportTitle(rating.assessment_result)), create("p", "", `项目 ${rating.project_id || "-"} · 版本 ${rating.project_version || "-"} · 规则 ${rating.rubric_version || "-"}`)); // SPDX-License-Identifier: MIT | 显示结论解释与版本信息。
     const metrics = create("div", "metric-row"); // SPDX-License-Identifier: MIT | 创建关键指标行。
-    metrics.append(create("span", "metric", `资料可靠度 ${Math.round(Number(rating.confidence || 0) * 100)}%`), create("span", "metric", `人工复核 ${rating.needs_human_review ? "需要" : "暂不需要"}`), create("span", "metric", `真人评分申请 ${rating.human_review_ready ? "已达到基础条件" : "暂不可申请"}`)); // SPDX-License-Identifier: MIT | 同时清楚展示真人评分的独立完成度资格，避免创作者把自动诊断与 BAS 混淆。
+    metrics.append(create("span", "metric", `置信度 ${Math.round(Number(rating.confidence || 0) * 100)}%`), create("span", "metric", `人工复核 ${rating.needs_human_review ? "需要" : "暂不需要"}`), create("span", "metric", `运行 ${rating.run_id || state.runId}`)); // SPDX-License-Identifier: MIT | 显示可靠度、复核标记与运行标识。
     summary.append(metrics); // SPDX-License-Identifier: MIT | 将指标加入摘要。
     hero.append(badge, summary); // SPDX-License-Identifier: MIT | 组合评分摘要区。
     reportContent.append(hero); // SPDX-License-Identifier: MIT | 将评分摘要加入报告。
     const grid = create("div", "report-grid"); // SPDX-License-Identifier: MIT | 创建报告双栏内容网格。
     const comparison = rating.knowledge_comparison || {}; // SPDX-License-Identifier: MIT | 读取类型知识库比对结果并提供空对象降级。
-    const crowdedPatterns = (comparison.crowded_patterns || []).map((pattern) => Array.isArray(pattern) ? pattern.map(featureName).join(" + ") : featureName(pattern)); // SPDX-License-Identifier: MIT | 将命中的机制组合转换为中文可读文本。
+    const crowdedPatterns = (comparison.crowded_patterns || []).map((pattern) => Array.isArray(pattern) ? pattern.join(" + ") : String(pattern)); // SPDX-License-Identifier: MIT | 将命中的机制组合转换为可读文本。
     const weightSummary = (comparison.dimension_weights || []).map((pair) => Array.isArray(pair) ? `${dimensionNames[pair[0]] || pair[0]} ${Math.round(Number(pair[1]) * 100)}%` : String(pair)); // SPDX-License-Identifier: MIT | 将当前类型的动态九维权重转换为百分比摘要。
-    const comparisonItems = [`匹配类型：${(comparison.matched_genres || []).map(genreName).join("、") || "尚未识别"}`, `同质化风险：${comparison.homogeneity_risk || "未知"}；差异候选分：${comparison.differentiation_score ?? "-"}/4`, `采用的类型常规玩法：${(comparison.matched_baseline_features || []).map(featureName).join("、") || "暂未识别"}`, `命中常见同质化组合：${crowdedPatterns.join("；") || "没有"}`, `项目声明的差异机制：${(comparison.declared_innovation_features || []).map(featureName).join("、") || "尚未填写"}`, `其中属于类型常规的机制：${(comparison.baseline_reuse_features || []).map(featureName).join("、") || "没有"}`, `对标作品：${(comparison.reference_games || []).join("、") || "尚未填写"}`, `验证方式：${(comparison.validation_methods || []).map((item) => optionName(item, validationMethodOptions)).join("、") || "尚未填写"}`, `本类型评分重点：${weightSummary.join("；") || "各维度采用默认权重"}`]; // SPDX-License-Identifier: MIT | 使用中文类型、机制和验证方式生成新手可读的知识库比对说明。
+    const comparisonItems = [`知识库版本：${comparison.knowledge_base_version || "-"}`, `匹配类型：${(comparison.matched_genres || []).join("、") || "未识别"}`, `同质化风险：${comparison.homogeneity_risk || "未知"}；差异候选分：${comparison.differentiation_score ?? "-"}/4`, `类型基线重合：${(comparison.matched_baseline_features || []).join("、") || "无"}`, `命中高密度组合：${crowdedPatterns.join("；") || "无"}`, `声明创新机制：${(comparison.declared_innovation_features || []).join("、") || "无"}`, `被识别为类型常规：${(comparison.baseline_reuse_features || []).join("、") || "无"}`, `对标作品：${(comparison.reference_games || []).join("、") || "无"}`, `验证方式：${(comparison.validation_methods || []).join("、") || "无"}`, `类型动态权重：${weightSummary.join("；") || "等权降级"}`, comparison.rationale || "暂无知识库解释"]; // SPDX-License-Identifier: MIT | 生成不依赖 HTML 拼接的完整知识库对比说明。
     grid.append(renderTextList("类型知识库与同质化比对", comparisonItems, true)); // SPDX-License-Identifier: MIT | 将类型、相似组合、创新候选和权重展示在报告首位。
     grid.append(renderDna(rating.game_dna || {})); // SPDX-License-Identifier: MIT | 加入九维评分分区。
-    const readiness = rating.resource_readiness || {}; // SPDX-License-Identifier: MIT | 读取不计入九维的当前资源准备度。
-    grid.append(renderTextList("当前资源准备度（不计入九维）", [`准备度 ${readiness.score ?? 0}/4`, readiness.rationale || "团队、周期和资金信息尚未填写；这不会改变游戏本身的产品可实现性分数。"], true)); // SPDX-License-Identifier: MIT | 明确展示缺人缺钱只用于缺口诊断。
-    const priorityActions = [...new Set([...(rating.blocking_issues || []), ...(rating.improvement_actions || []).map((item) => String(item).replace(/^修复：/, ""))])]; // SPDX-License-Identifier: MIT | 合并阻塞和行动并移除重复的“修复”前缀。
-    grid.append(renderTextList("优先改进", priorityActions, false)); // SPDX-License-Identifier: MIT | 只向新手展示去重后的可执行改进列表。
+    grid.append(renderTextList("阻塞与改进行动", [...(rating.blocking_issues || []), ...(rating.improvement_actions || [])], false)); // SPDX-License-Identifier: MIT | 加入评分阻塞和行动列表。
     grid.append(renderCardSection("缺失制作模块", report.missing_modules || [], (item) => [item.name, `${item.priority} · ${item.reason}`])); // SPDX-License-Identifier: MIT | 加入缺失模块诊断。
     grid.append(renderCardSection("团队角色缺口", report.missing_roles || [], (item) => [item.role, `${item.priority} · ${item.timing} · ${item.engagement}`])); // SPDX-License-Identifier: MIT | 加入团队角色诊断。
-    grid.append(renderCardSection("能力需求", report.capability_requirements || [], (item) => [item.name, `${friendlyText(item.minimum_level)} · ${item.integration_context}`], true)); // SPDX-License-Identifier: MIT | 新手界面隐藏内部能力代码，只展示能力等级和使用场景。
-    grid.append(renderCardSection("投入缺口", report.investment_needs || [], (item) => [internalNames[item.category] || item.category, `${formatMoney(item.amount_gap, item.unit)} · ${item.reason}`])); // SPDX-License-Identifier: MIT | 使用中文类别展示创作者数字计算的投入差额。
+    grid.append(renderCardSection("能力需求", report.capability_requirements || [], (item) => [item.name, `${item.skill_id} · ${item.minimum_level} · ${item.integration_context}`], true)); // SPDX-License-Identifier: MIT | 加入能力图谱需求。
+    grid.append(renderCardSection("投入缺口", report.investment_needs || [], (item) => [item.category, `${formatMoney(item.amount_gap, item.unit)} · ${item.reason}`])); // SPDX-License-Identifier: MIT | 加入创作者数字计算的投入差额。
     grid.append(renderTimelineSection("制作路线", report.production_roadmap || [], true)); // SPDX-License-Identifier: MIT | 加入完整生产阶段路线。
     Object.entries(report.release_roadmap || {}).forEach(([platform, steps]) => grid.append(renderTimelineSection(`${platform.toUpperCase()} 上架路线`, steps || [], true))); // SPDX-License-Identifier: MIT | 按目标平台加入上架步骤。
     grid.append(renderTextList("假设与能力边界", [...(report.assumptions || []), ...(rating.limitations || [])], true)); // SPDX-License-Identifier: MIT | 加入未知假设和评分能力边界。
-    const professional = create("details", "report-section full advanced-json"); // SPDX-License-Identifier: MIT | 创建默认折叠的专业运行信息区域。
-    professional.append(create("summary", "", "专业信息与内部编号"), renderTextList("内部记录", [`评分规则：${rating.rubric_version || "-"}`, `知识库：${comparison.knowledge_base_version || "-"}`, `运行编号：${rating.run_id || state.runId}`, comparison.rationale || "暂无内部比对说明"], true)); // SPDX-License-Identifier: MIT | 将规则版本、运行编号和内部比对参数移出新手主视图。
-    grid.append(professional); // SPDX-License-Identifier: MIT | 将折叠专业信息加入报告末尾。
     reportContent.append(grid); // SPDX-License-Identifier: MIT | 将全部报告分区加入页面。
 } // SPDX-License-Identifier: MIT | 结束完整报告渲染。
 function reportTitle(result) { // SPDX-License-Identifier: MIT | 将初筛代码转换为不夸大的中文说明。
-    return { D: "基础门槛未通过", C: "可继续补强与验证", B_GATE: "可以进入下一轮真人验证" }[result] || "诊断结果"; // SPDX-License-Identifier: MIT | 使用创作者能理解的语言解释三类内部结论。
+    return { D: "基础门槛未通过", C: "可继续补强与验证", B_GATE: "达到暂定 B 门槛" }[result] || "诊断结果"; // SPDX-License-Identifier: MIT | 返回 D、C、B_GATE 对应解释。
 } // SPDX-License-Identifier: MIT | 结束报告标题函数。
 function renderDna(dna) { // SPDX-License-Identifier: MIT | 创建九维评分可视化分区。
     const section = create("section", "report-section"); // SPDX-License-Identifier: MIT | 创建九维报告分区。
@@ -695,7 +609,7 @@ function renderTextList(title, items, full) { // SPDX-License-Identifier: MIT | 
     const section = create("section", `report-section${full ? " full" : ""}`); // SPDX-License-Identifier: MIT | 创建可选全宽报告分区。
     section.append(create("h3", "", title)); // SPDX-License-Identifier: MIT | 添加列表分区标题。
     const list = create("ul", "list-clean"); // SPDX-License-Identifier: MIT | 创建语义化无序列表。
-    (items.length ? items : ["暂无"]).forEach((item) => list.append(create("li", "", friendlyText(item)))); // SPDX-License-Identifier: MIT | 翻译内部代码后使用纯文本显示每个诊断条目。
+    (items.length ? items : ["暂无"]).forEach((item) => list.append(create("li", "", item))); // SPDX-License-Identifier: MIT | 使用纯文本显示每个诊断条目或空状态。
     section.append(list); // SPDX-License-Identifier: MIT | 将列表加入报告分区。
     return section; // SPDX-License-Identifier: MIT | 返回纯文本报告分区。
 } // SPDX-License-Identifier: MIT | 结束文本列表渲染。
@@ -704,7 +618,7 @@ function renderCardSection(title, items, mapper, full = false) { // SPDX-License
     section.append(create("h3", "", title)); // SPDX-License-Identifier: MIT | 添加卡片分区标题。
     const list = create("div", "card-list"); // SPDX-License-Identifier: MIT | 创建卡片列表容器。
     if (!items.length) list.append(create("p", "empty-state", "当前没有识别到该类缺口。")); // SPDX-License-Identifier: MIT | 在无缺口时显示明确空状态。
-    items.forEach((item) => { const [name, detail] = mapper(item); const card = create("div", "mini-card"); card.append(create("strong", "", friendlyText(name)), create("p", "", friendlyText(detail))); list.append(card); }); // SPDX-License-Identifier: MIT | 翻译内部代码后使用文本节点生成结构化诊断卡片。
+    items.forEach((item) => { const [name, detail] = mapper(item); const card = create("div", "mini-card"); card.append(create("strong", "", name), create("p", "", detail)); list.append(card); }); // SPDX-License-Identifier: MIT | 使用文本节点生成每个结构化诊断卡片。
     section.append(list); // SPDX-License-Identifier: MIT | 将卡片列表加入报告分区。
     return section; // SPDX-License-Identifier: MIT | 返回卡片报告分区。
 } // SPDX-License-Identifier: MIT | 结束卡片分区渲染。
@@ -712,7 +626,7 @@ function renderTimelineSection(title, steps, full) { // SPDX-License-Identifier:
     const section = create("section", `report-section${full ? " full" : ""}`); // SPDX-License-Identifier: MIT | 创建可选全宽时间线分区。
     section.append(create("h3", "", title)); // SPDX-License-Identifier: MIT | 添加时间线标题。
     const timeline = create("div", "timeline"); // SPDX-License-Identifier: MIT | 创建时间线容器。
-    steps.forEach((step, index) => { const item = create("div", "timeline-item"); const copy = create("div"); copy.append(create("strong", "", friendlyText(step.name)), create("p", "", friendlyText(step.objective)), create("p", "", `完成标准：${friendlyText((step.exit_criteria || []).join("；"))}`)); item.append(create("span", "timeline-index", step.order || index + 1), copy); timeline.append(item); }); // SPDX-License-Identifier: MIT | 使用中文友好文本显示流程名称、目标和完成标准。
+    steps.forEach((step, index) => { const item = create("div", "timeline-item"); const copy = create("div"); copy.append(create("strong", "", step.name), create("p", "", step.objective), create("p", "", `退出条件：${(step.exit_criteria || []).join("；")}`)); item.append(create("span", "timeline-index", step.order || index + 1), copy); timeline.append(item); }); // SPDX-License-Identifier: MIT | 用纯文本节点显示流程名称、目标和退出条件。
     section.append(timeline); // SPDX-License-Identifier: MIT | 将时间线加入报告分区。
     return section; // SPDX-License-Identifier: MIT | 返回流程时间线分区。
 } // SPDX-License-Identifier: MIT | 结束时间线分区渲染。

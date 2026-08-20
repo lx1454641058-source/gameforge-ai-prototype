@@ -6,44 +6,24 @@
     <meta name="color-scheme" content="dark"> <!-- SPDX-License-Identifier: MIT | 声明界面使用深色配色。 -->
     <title>GameForge · 游戏项目诊断台</title> <!-- SPDX-License-Identifier: MIT | 设置浏览器标题。 -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c7ff59'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='23' font-family='Arial' font-weight='900' fill='%2308100f'%3EGF%3C/text%3E%3C/svg%3E"> <!-- SPDX-License-Identifier: MIT | 使用内嵌品牌图标避免额外网络请求。 -->
-    <link rel="stylesheet" href="/styles.css?v=platform-workbench-20260815"> <!-- SPDX-License-Identifier: MIT | 使用版本参数确保浏览器加载升级后的平台工作台样式。 -->
+    <link rel="stylesheet" href="/styles.css"> <!-- SPDX-License-Identifier: MIT | 加载同源界面样式。 -->
 </head> <!-- SPDX-License-Identifier: MIT | 结束页面元数据。 -->
 <body> <!-- SPDX-License-Identifier: MIT | 开始页面主体。 -->
     <div class="ambient ambient-one" aria-hidden="true"></div> <!-- SPDX-License-Identifier: MIT | 添加纯装饰背景光晕。 -->
     <div class="ambient ambient-two" aria-hidden="true"></div> <!-- SPDX-License-Identifier: MIT | 添加第二层纯装饰背景。 -->
-    <header class="topbar"> <!-- SPDX-License-Identifier: MIT | 创建与平台原型一致的品牌、导航和状态栏。 -->
-        <a class="brand" href="#top" aria-label="GameForge 游戏评分工作台"> <!-- SPDX-License-Identifier: MIT | 提供可访问的评分工作台首页链接。 -->
-            <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span> <!-- SPDX-License-Identifier: MIT | 使用平台原型的四格品牌图形。 -->
-            <span class="brand-copy"><strong>GAMEFORGE</strong><small>AI</small></span> <!-- SPDX-License-Identifier: MIT | 使用平台原型的品牌文字结构。 -->
+    <header class="topbar"> <!-- SPDX-License-Identifier: MIT | 创建全局品牌与连接状态栏。 -->
+        <a class="brand" href="#top" aria-label="GameForge 首页"> <!-- SPDX-License-Identifier: MIT | 提供可访问的品牌首页链接。 -->
+            <span class="brand-mark" aria-hidden="true">GF</span> <!-- SPDX-License-Identifier: MIT | 显示品牌缩写图形。 -->
+            <span><strong>GameForge</strong><small>AI PROJECT LAB</small></span> <!-- SPDX-License-Identifier: MIT | 显示产品名称与定位。 -->
         </a> <!-- SPDX-License-Identifier: MIT | 结束品牌链接。 -->
-        <nav class="main-nav" aria-label="评分工作台导航"> <!-- SPDX-License-Identifier: MIT | 提供不离开当前评分流程的页内导航。 -->
-            <a class="nav-item" href="#connect"><span>项目接入</span><small>开始诊断</small></a> <!-- SPDX-License-Identifier: MIT | 链接项目连接步骤。 -->
-            <a class="nav-item active" href="#upload"><span>游戏评分</span><small>评分工作台</small></a> <!-- SPDX-License-Identifier: MIT | 标示当前游戏平台能力。 -->
-            <a class="nav-item" href="#report"><span>诊断结果</span><small>制作路线</small></a> <!-- SPDX-License-Identifier: MIT | 链接评分报告步骤。 -->
-        </nav> <!-- SPDX-License-Identifier: MIT | 结束评分工作台导航。 -->
-        <div class="top-actions"> <!-- SPDX-License-Identifier: MIT | 组合批次提示和真实连接状态。 -->
-            <div class="release-countdown"><span class="status-dot"></span><span>评分通道</span><strong>已开放</strong></div> <!-- SPDX-License-Identifier: MIT | 告知创作者当前可使用自动初筛。 -->
-            <div class="connection-pill" id="connectionPill"><span class="signal"></span><span id="connectionText">评分助手未连接</span></div> <!-- SPDX-License-Identifier: MIT | 使用中文显示真实连接状态。 -->
-        </div> <!-- SPDX-License-Identifier: MIT | 结束顶部状态操作区。 -->
+        <div class="connection-pill" id="connectionPill"><span class="signal"></span><span id="connectionText">Agent 未连接</span></div> <!-- SPDX-License-Identifier: MIT | 显示实时连接状态。 -->
     </header> <!-- SPDX-License-Identifier: MIT | 结束全局状态栏。 -->
-    <main id="top" class="page-shell"> <!-- SPDX-License-Identifier: MIT | 使用平台原型的页面容器承载真实评分功能。 -->
-        <section class="hero workbench-hero"> <!-- SPDX-License-Identifier: MIT | 创建平台化的评分工作台首屏。 -->
-            <div class="hero-copy"> <!-- SPDX-License-Identifier: MIT | 组织评分工作台的说明文字。 -->
-                <div class="eyebrow"><span class="eyebrow-dot"></span>GAME EVALUATION AGENT · 可追溯评分</div> <!-- SPDX-License-Identifier: MIT | 以平台原型风格说明 Agent 属性。 -->
-                <h1>游戏评分 AI<br><span>从方案到可执行诊断</span></h1> <!-- SPDX-License-Identifier: MIT | 展示评分工作台的核心目标。 -->
-                <p>把策划案、Demo 和问卷信息汇总为一份清晰的制作判断：项目是否具备基础、与同类作品有哪些差异、还缺什么模块、能力和投入。</p> <!-- SPDX-License-Identifier: MIT | 使用新手也能理解的语言解释真实功能。 -->
-                <div class="boundary"><span>重要说明</span>自动初筛不等于真人审核评分（BAS）；满足完成度条件后，才可申请真人评分。</div> <!-- SPDX-License-Identifier: MIT | 用中文明示 BAS 的使用边界和门槛。 -->
-            </div> <!-- SPDX-License-Identifier: MIT | 结束评分工作台说明文字。 -->
-            <aside class="agent-overview" aria-label="评分流程概览"> <!-- SPDX-License-Identifier: MIT | 以平台原型卡片展示真实评分流程。 -->
-                <div class="agent-overview-head"><span class="agent-orb" aria-hidden="true">GF</span><div><strong>游戏评分 Agent</strong><small>规则驱动 · 可回溯</small></div><span class="overview-live">待接入</span></div> <!-- SPDX-License-Identifier: MIT | 展示 Agent 身份与初始状态。 -->
-                <ol class="agent-flow"> <!-- SPDX-License-Identifier: MIT | 展示与实际页面步骤一致的四段流程。 -->
-                    <li class="active"><b>01</b><span><strong>录入项目</strong><small>连接评分助手并创建本次记录</small></span></li> <!-- SPDX-License-Identifier: MIT | 描述真实的连接步骤。 -->
-                    <li><b>02</b><span><strong>上传资料</strong><small>提交策划资料和可运行版本</small></span></li> <!-- SPDX-License-Identifier: MIT | 描述真实的上传步骤。 -->
-                    <li><b>03</b><span><strong>确认问卷</strong><small>核实 AI 草稿与关键信息</small></span></li> <!-- SPDX-License-Identifier: MIT | 描述真实的问卷步骤。 -->
-                    <li><b>04</b><span><strong>生成诊断</strong><small>查看九维评分和制作路线</small></span></li> <!-- SPDX-License-Identifier: MIT | 描述真实的报告步骤。 -->
-                </ol> <!-- SPDX-License-Identifier: MIT | 结束评分流程列表。 -->
-                <div class="overview-note"><span>真人评分</span><strong>完成度达标后开放申请</strong></div> <!-- SPDX-License-Identifier: MIT | 说明真人评分申请的真实业务规则。 -->
-            </aside> <!-- SPDX-License-Identifier: MIT | 结束评分流程概览。 -->
+    <main id="top"> <!-- SPDX-License-Identifier: MIT | 创建页面主要内容。 -->
+        <section class="hero"> <!-- SPDX-License-Identifier: MIT | 创建产品介绍区域。 -->
+            <div class="eyebrow">GAME READINESS / CAPABILITY GRAPH / RELEASE PATH</div> <!-- SPDX-License-Identifier: MIT | 展示诊断范围标签。 -->
+            <h1>把游戏构想，拆成<br><span>可执行的制作路线。</span></h1> <!-- SPDX-License-Identifier: MIT | 展示主要价值主张。 -->
+            <p>上传方案与 Demo，完成结构化问卷，由评分 Agent 先对比类型知识库与同质化组合，再输出 D / C / B_GATE 初筛、缺失模块、投入差额、团队能力需求、制作流程与上架路径。</p> <!-- SPDX-License-Identifier: MIT | 解释知识库比对在评分前执行的完整业务流程。 -->
+            <div class="boundary"><span>边界声明</span>AI 初筛不等于真人 BAS 评分；当前 Demo 只做静态安全登记，不会自动试玩。</div> <!-- SPDX-License-Identifier: MIT | 明示评分能力边界。 -->
         </section> <!-- SPDX-License-Identifier: MIT | 结束产品介绍区域。 -->
         <nav class="steps" aria-label="诊断流程"> <!-- SPDX-License-Identifier: MIT | 创建流程步骤导航。 -->
             <a href="#connect" class="step active"><b>01</b><span>连接与项目</span></a> <!-- SPDX-License-Identifier: MIT | 链接连接配置步骤。 -->
@@ -53,27 +33,27 @@
         </nav> <!-- SPDX-License-Identifier: MIT | 结束流程导航。 -->
         <section class="workspace"> <!-- SPDX-License-Identifier: MIT | 创建主要操作工作台。 -->
             <article class="panel" id="connect"> <!-- SPDX-License-Identifier: MIT | 创建连接和项目配置面板。 -->
-                <div class="panel-head"><div><span class="section-index">01</span><h2>连接评分助手</h2></div><p>连接密钥只在当前页面临时使用，不会保存。</p></div> <!-- SPDX-License-Identifier: MIT | 使用新手语言展示连接面板标题和安全提示。 -->
+                <div class="panel-head"><div><span class="section-index">01</span><h2>连接 Agent</h2></div><p>令牌只保存在当前页面内存，不写入浏览器存储。</p></div> <!-- SPDX-License-Identifier: MIT | 展示连接面板标题和安全提示。 -->
                 <form id="connectionForm" class="form-grid" autocomplete="off"> <!-- SPDX-License-Identifier: MIT | 创建不保存凭据的连接表单。 -->
-                    <label class="field field-wide"><span>连接密钥</span><input id="apiToken" type="password" minlength="16" required spellcheck="false" autocomplete="off" placeholder="填写启动评分助手时设置的密钥"><small>至少 16 个字符，只在当前页面临时使用。</small></label> <!-- SPDX-License-Identifier: MIT | 使用新手语言收集本地服务连接密钥。 -->
-                    <label class="field"><span>记录编号</span><input id="projectId" required value="game-001" spellcheck="false" autocomplete="off"><small>只是用来区分多次测试，一般不用修改。</small></label> <!-- SPDX-License-Identifier: MIT | 用新手语言收集跨平台安全的稳定项目标识。 -->
-                    <label class="field"><span>方案版本</span><input id="projectVersion" required value="1.0" spellcheck="false" autocomplete="off"><small>第一次测试保持 1.0 即可。</small></label> <!-- SPDX-License-Identifier: MIT | 用新手说明收集冻结项目版本。 -->
+                    <label class="field field-wide"><span>API Token</span><input id="apiToken" type="password" minlength="16" required spellcheck="false" autocomplete="off" placeholder="与启动 Agent 时设置的 Token 一致"><small>至少 16 个字符，仅当前标签页有效。</small></label> <!-- SPDX-License-Identifier: MIT | 收集本地 Agent Bearer Token。 -->
+                    <label class="field"><span>项目 ID</span><input id="projectId" required value="project-demo" spellcheck="false" autocomplete="off"></label> <!-- SPDX-License-Identifier: MIT | 收集稳定项目标识。 -->
+                    <label class="field"><span>版本</span><input id="projectVersion" required value="0.1.0" spellcheck="false" autocomplete="off"></label> <!-- SPDX-License-Identifier: MIT | 收集冻结项目版本。 -->
                     <label class="field field-wide"><span>项目名称</span><input id="projectTitle" required placeholder="例如：星环余烬" autocomplete="off"></label> <!-- SPDX-License-Identifier: MIT | 收集项目展示名称。 -->
                     <div class="form-actions field-wide"><button class="button primary" type="submit"><span>连接并读取问卷</span><b aria-hidden="true">→</b></button></div> <!-- SPDX-License-Identifier: MIT | 提交连接与问卷加载请求。 -->
                 </form> <!-- SPDX-License-Identifier: MIT | 结束连接表单。 -->
             </article> <!-- SPDX-License-Identifier: MIT | 结束连接配置面板。 -->
             <article class="panel locked" id="upload" aria-disabled="true"> <!-- SPDX-License-Identifier: MIT | 创建初始锁定的资料上传面板。 -->
-                <div class="panel-head"><div><span class="section-index">02</span><h2>上传方案与可运行版本</h2></div><p>方案文件必须上传；早期构想阶段可以暂时没有可运行版本。</p></div> <!-- SPDX-License-Identifier: MIT | 使用新手语言展示上传规则。 -->
+                <div class="panel-head"><div><span class="section-index">02</span><h2>上传方案与 Demo</h2></div><p>方案文件必传；概念、预原型阶段允许暂时没有 Demo。</p></div> <!-- SPDX-License-Identifier: MIT | 展示上传规则。 -->
                 <div class="upload-grid"> <!-- SPDX-License-Identifier: MIT | 创建两类上传区域。 -->
-                    <label class="dropzone" for="designFiles"><span class="drop-icon" aria-hidden="true">方案</span><strong>策划与设计资料</strong><small>支持 Word、PDF、纯文本和 Markdown，可多选</small><input id="designFiles" type="file" multiple accept=".docx,.pdf,.txt,.md,.json"></label> <!-- SPDX-License-Identifier: MIT | 使用中文说明收集方案类文件。 -->
-                    <label class="dropzone" for="demoFiles"><span class="drop-icon accent" aria-hidden="true">演示</span><strong>可运行版本或源码压缩包</strong><small>请上传 ZIP 压缩包；系统只检查文件，不会运行程序</small><input id="demoFiles" type="file" multiple accept=".zip"></label> <!-- SPDX-License-Identifier: MIT | 使用中文说明收集可运行版本压缩包。 -->
+                    <label class="dropzone" for="designFiles"><span class="drop-icon" aria-hidden="true">DOC</span><strong>方案与设计资料</strong><small>DOCX / PDF / TXT / MD / JSON，可多选</small><input id="designFiles" type="file" multiple accept=".docx,.pdf,.txt,.md,.json"></label> <!-- SPDX-License-Identifier: MIT | 收集方案类文件。 -->
+                    <label class="dropzone" for="demoFiles"><span class="drop-icon accent" aria-hidden="true">ZIP</span><strong>Demo 或源码快照</strong><small>当前仅接受 ZIP，不会自动执行</small><input id="demoFiles" type="file" multiple accept=".zip"></label> <!-- SPDX-License-Identifier: MIT | 收集 Demo ZIP 文件。 -->
                 </div> <!-- SPDX-License-Identifier: MIT | 结束上传区域。 -->
                 <div id="artifactList" class="artifact-list" aria-live="polite"><p class="empty-state">尚未选择资料。</p></div> <!-- SPDX-License-Identifier: MIT | 展示上传资料状态。 -->
                 <div class="panel-actions"><button id="prefillButton" class="button secondary" type="button" disabled>生成问卷草稿 <b aria-hidden="true">→</b></button></div> <!-- SPDX-License-Identifier: MIT | 触发问卷代填。 -->
             </article> <!-- SPDX-License-Identifier: MIT | 结束资料上传面板。 -->
             <article class="panel locked" id="questionnaire" aria-disabled="true"> <!-- SPDX-License-Identifier: MIT | 创建初始锁定的动态问卷面板。 -->
-                <div class="panel-head"><div><span class="section-index">03</span><h2>审核并确认问卷</h2></div><p>自动代填只提供答案草稿；关键答案必须由创作者确认后才能评分。</p></div> <!-- SPDX-License-Identifier: MIT | 用自然中文展示问卷确认规则。 -->
-                <div class="question-toolbar"><span id="questionProgress">等待连接评分助手</span><button id="confirmFilledButton" class="text-button" type="button" disabled>确认所有已填写答案</button></div> <!-- SPDX-License-Identifier: MIT | 展示问卷完成度和批量确认操作。 -->
+                <div class="panel-head"><div><span class="section-index">03</span><h2>审核并确认问卷</h2></div><p>AI 只提供候选答案；关键答案必须由创作者确认后才能评分。</p></div> <!-- SPDX-License-Identifier: MIT | 展示问卷确认规则。 -->
+                <div class="question-toolbar"><span id="questionProgress">等待连接 Agent</span><button id="confirmFilledButton" class="text-button" type="button" disabled>确认所有已填写答案</button></div> <!-- SPDX-License-Identifier: MIT | 展示问卷完成度和批量确认操作。 -->
                 <form id="questionForm"><div id="questionList" class="question-list"></div></form> <!-- SPDX-License-Identifier: MIT | 承载按服务合同生成的问卷控件。 -->
                 <div class="panel-actions"><button id="runButton" class="button primary" type="button" disabled>提交并运行诊断 <b aria-hidden="true">↗</b></button></div> <!-- SPDX-License-Identifier: MIT | 提交冻结问卷并执行评分。 -->
             </article> <!-- SPDX-License-Identifier: MIT | 结束问卷面板。 -->
@@ -83,9 +63,9 @@
             </article> <!-- SPDX-License-Identifier: MIT | 结束报告面板。 -->
         </section> <!-- SPDX-License-Identifier: MIT | 结束主要操作工作台。 -->
     </main> <!-- SPDX-License-Identifier: MIT | 结束页面主要内容。 -->
-    <footer><span>GameForge · 游戏项目诊断台</span><span>评分规则和内部编号可在报告底部的“专业信息”中查看</span></footer> <!-- SPDX-License-Identifier: MIT | 将技术版本信息移入默认折叠区域。 -->
+    <footer><span>GameForge AI · Rating Agent Console</span><span>Rule: GF-GAME-RUBRIC-0.2 · KB: GF-GENRE-KB-1.0</span></footer> <!-- SPDX-License-Identifier: MIT | 展示前后端一致的规则与知识库版本。 -->
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div> <!-- SPDX-License-Identifier: MIT | 向辅助技术播报异步操作状态。 -->
-    <dialog id="auditDialog"><div class="dialog-head"><div><span class="section-index">记录</span><h2>运行记录</h2></div><button id="closeAuditButton" class="icon-button" type="button" aria-label="关闭运行记录窗口">×</button></div><div id="auditContent" class="audit-content"></div></dialog> <!-- SPDX-License-Identifier: MIT | 使用中文展示追加式运行记录。 -->
+    <dialog id="auditDialog"><div class="dialog-head"><div><span class="section-index">LOG</span><h2>运行审计</h2></div><button id="closeAuditButton" class="icon-button" type="button" aria-label="关闭审计窗口">×</button></div><div id="auditContent" class="audit-content"></div></dialog> <!-- SPDX-License-Identifier: MIT | 展示追加式运行审计记录。 -->
     <script src="/app.js" defer></script> <!-- SPDX-License-Identifier: MIT | 加载同源前端交互逻辑。 -->
 </body> <!-- SPDX-License-Identifier: MIT | 结束页面主体。 -->
 </html> <!-- SPDX-License-Identifier: MIT | 结束 HTML 文档。 -->
