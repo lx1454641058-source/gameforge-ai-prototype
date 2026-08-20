@@ -1,0 +1,228 @@
+:root { --bg: #08100f; --surface: #0d1715; --surface-2: #111e1b; --line: rgba(199, 255, 89, .16); --line-strong: rgba(199, 255, 89, .38); --text: #edf3eb; --muted: #8e9e98; --acid: #c7ff59; --mint: #5bf1bd; --danger: #ff7b72; --warning: #ffd166; --radius: 18px; --shadow: 0 30px 90px rgba(0, 0, 0, .38); } /* SPDX-License-Identifier: MIT | 定义界面色彩和尺寸令牌。 */
+* { box-sizing: border-box; } /* SPDX-License-Identifier: MIT | 使用一致的盒模型计算。 */
+html { scroll-behavior: smooth; } /* SPDX-License-Identifier: MIT | 提供平滑锚点导航。 */
+body { margin: 0; min-width: 320px; color: var(--text); background: var(--bg); font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif; line-height: 1.6; } /* SPDX-License-Identifier: MIT | 设置页面基础排版与背景。 */
+button, input, textarea, select { font: inherit; } /* SPDX-License-Identifier: MIT | 统一表单控件字体。 */
+button, a, label { -webkit-tap-highlight-color: transparent; } /* SPDX-License-Identifier: MIT | 移除移动端默认点击闪烁。 */
+a { color: inherit; text-decoration: none; } /* SPDX-License-Identifier: MIT | 重置链接视觉样式。 */
+.ambient { position: fixed; z-index: -1; width: 38rem; height: 38rem; border-radius: 50%; filter: blur(120px); opacity: .12; pointer-events: none; } /* SPDX-License-Identifier: MIT | 定义不影响交互的背景光晕。 */
+.ambient-one { top: -20rem; right: -10rem; background: var(--acid); } /* SPDX-License-Identifier: MIT | 放置右上绿色光晕。 */
+.ambient-two { top: 45rem; left: -24rem; background: #16a085; } /* SPDX-License-Identifier: MIT | 放置左侧青色光晕。 */
+.topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 18px clamp(20px, 5vw, 72px); border-bottom: 1px solid rgba(255, 255, 255, .06); background: rgba(8, 16, 15, .84); backdrop-filter: blur(18px); } /* SPDX-License-Identifier: MIT | 创建粘性全局状态栏。 */
+.brand { display: flex; align-items: center; gap: 12px; } /* SPDX-License-Identifier: MIT | 排列品牌标识与名称。 */
+.brand-mark { display: grid; place-items: center; width: 42px; height: 42px; color: #0a120e; background: var(--acid); border-radius: 10px 2px 10px 2px; font-weight: 900; letter-spacing: -.08em; } /* SPDX-License-Identifier: MIT | 绘制品牌缩写图形。 */
+.brand strong, .brand small { display: block; } /* SPDX-License-Identifier: MIT | 将品牌文字分为两行。 */
+.brand strong { font-size: 17px; letter-spacing: .02em; } /* SPDX-License-Identifier: MIT | 设置品牌主名称。 */
+.brand small { color: var(--muted); font-size: 9px; letter-spacing: .26em; } /* SPDX-License-Identifier: MIT | 设置品牌副标题。 */
+.connection-pill { display: flex; align-items: center; gap: 9px; padding: 8px 13px; color: var(--muted); border: 1px solid rgba(255, 255, 255, .08); border-radius: 999px; font-size: 12px; } /* SPDX-License-Identifier: MIT | 定义连接状态胶囊。 */
+.connection-pill.connected { color: var(--acid); border-color: var(--line-strong); } /* SPDX-License-Identifier: MIT | 设置已连接状态颜色。 */
+.signal { width: 7px; height: 7px; background: currentColor; border-radius: 50%; box-shadow: 0 0 12px currentColor; } /* SPDX-License-Identifier: MIT | 绘制状态信号灯。 */
+main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; } /* SPDX-License-Identifier: MIT | 限制主要内容宽度。 */
+.hero { padding: clamp(76px, 11vw, 145px) 0 70px; } /* SPDX-License-Identifier: MIT | 设置首屏介绍留白。 */
+.eyebrow { color: var(--acid); font-family: Consolas, monospace; font-size: 11px; letter-spacing: .22em; } /* SPDX-License-Identifier: MIT | 设置工程化范围标签。 */
+.hero h1 { max-width: 920px; margin: 19px 0 26px; font-size: clamp(44px, 7vw, 92px); line-height: .98; letter-spacing: -.065em; font-weight: 750; } /* SPDX-License-Identifier: MIT | 设置响应式主标题。 */
+.hero h1 span { color: transparent; background: linear-gradient(100deg, var(--acid), var(--mint)); -webkit-background-clip: text; background-clip: text; } /* SPDX-License-Identifier: MIT | 为重点标题添加渐变文字。 */
+.hero > p { max-width: 760px; margin: 0; color: #afbbb6; font-size: clamp(16px, 2vw, 20px); } /* SPDX-License-Identifier: MIT | 设置价值说明文字。 */
+.boundary { display: inline-flex; gap: 12px; margin-top: 30px; padding: 10px 14px; color: var(--muted); border-left: 2px solid var(--warning); background: rgba(255, 209, 102, .05); font-size: 12px; } /* SPDX-License-Identifier: MIT | 强调评分能力边界。 */
+.boundary span { color: var(--warning); font-weight: 700; } /* SPDX-License-Identifier: MIT | 突出边界标签。 */
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); margin-bottom: 24px; border: 1px solid rgba(255, 255, 255, .07); border-radius: 14px; overflow: hidden; background: rgba(255, 255, 255, .02); } /* SPDX-License-Identifier: MIT | 创建四步流程导航。 */
+.step { display: flex; gap: 12px; align-items: center; padding: 17px 20px; color: var(--muted); border-right: 1px solid rgba(255, 255, 255, .06); font-size: 13px; transition: .2s ease; } /* SPDX-License-Identifier: MIT | 设置流程链接样式。 */
+.step:last-child { border-right: 0; } /* SPDX-License-Identifier: MIT | 移除末项分隔线。 */
+.step:hover, .step.active { color: var(--text); background: rgba(199, 255, 89, .05); } /* SPDX-License-Identifier: MIT | 提供流程项交互反馈。 */
+.step b { color: var(--acid); font-family: Consolas, monospace; font-size: 10px; } /* SPDX-License-Identifier: MIT | 设置步骤编号样式。 */
+.workspace { display: grid; gap: 24px; padding-bottom: 100px; } /* SPDX-License-Identifier: MIT | 排列各操作面板。 */
+.panel { position: relative; padding: clamp(22px, 4vw, 42px); border: 1px solid rgba(255, 255, 255, .08); border-radius: var(--radius); background: linear-gradient(145deg, rgba(17, 30, 27, .92), rgba(10, 19, 17, .94)); box-shadow: var(--shadow); overflow: hidden; } /* SPDX-License-Identifier: MIT | 定义主要工作面板。 */
+.panel::before { position: absolute; top: 0; left: 0; width: 90px; height: 1px; background: var(--acid); content: ""; } /* SPDX-License-Identifier: MIT | 添加面板强调线。 */
+.panel.locked > :not(.panel-head) { opacity: .34; pointer-events: none; } /* SPDX-License-Identifier: MIT | 弱化尚未开放的面板内容。 */
+.panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 30px; } /* SPDX-License-Identifier: MIT | 排列面板标题和说明。 */
+.panel-head > div { display: flex; align-items: center; gap: 13px; } /* SPDX-License-Identifier: MIT | 排列面板编号与标题。 */
+.panel-head h2 { margin: 0; font-size: clamp(22px, 3vw, 30px); letter-spacing: -.035em; } /* SPDX-License-Identifier: MIT | 设置面板标题。 */
+.panel-head p { max-width: 440px; margin: 4px 0 0; color: var(--muted); font-size: 12px; text-align: right; } /* SPDX-License-Identifier: MIT | 设置面板规则说明。 */
+.section-index { display: inline-grid; place-items: center; min-width: 32px; height: 24px; padding: 0 7px; color: var(--acid); border: 1px solid var(--line-strong); border-radius: 4px; font-family: Consolas, monospace; font-size: 10px; } /* SPDX-License-Identifier: MIT | 设置面板编号标签。 */
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; } /* SPDX-License-Identifier: MIT | 创建连接表单双栏布局。 */
+.field { display: grid; gap: 8px; color: #c7d0cc; font-size: 12px; font-weight: 650; } /* SPDX-License-Identifier: MIT | 组织表单标签和控件。 */
+.field-wide { grid-column: 1 / -1; } /* SPDX-License-Identifier: MIT | 让宽字段占满整行。 */
+.field small { color: var(--muted); font-weight: 400; } /* SPDX-License-Identifier: MIT | 设置字段辅助说明。 */
+input, textarea, select { width: 100%; color: var(--text); border: 1px solid rgba(255, 255, 255, .11); border-radius: 9px; outline: 0; background: rgba(4, 11, 9, .64); transition: border-color .2s, box-shadow .2s; } /* SPDX-License-Identifier: MIT | 设置表单控件基础视觉。 */
+input, select { min-height: 48px; padding: 0 14px; } /* SPDX-License-Identifier: MIT | 设置输入框与选择器尺寸。 */
+textarea { min-height: 112px; padding: 12px 14px; resize: vertical; } /* SPDX-License-Identifier: MIT | 设置多行输入框尺寸。 */
+input:focus, textarea:focus, select:focus { border-color: var(--line-strong); box-shadow: 0 0 0 3px rgba(199, 255, 89, .08); } /* SPDX-License-Identifier: MIT | 提供可见键盘焦点。 */
+.form-actions, .panel-actions { display: flex; justify-content: flex-end; margin-top: 8px; } /* SPDX-License-Identifier: MIT | 对齐主要操作按钮。 */
+.button { display: inline-flex; align-items: center; justify-content: space-between; gap: 30px; min-height: 50px; padding: 0 19px; border: 1px solid transparent; border-radius: 9px; cursor: pointer; font-weight: 750; transition: transform .2s, opacity .2s, background .2s; } /* SPDX-License-Identifier: MIT | 定义主要按钮交互样式。 */
+.button:hover:not(:disabled) { transform: translateY(-2px); } /* SPDX-License-Identifier: MIT | 添加按钮悬停反馈。 */
+.button:disabled { cursor: not-allowed; opacity: .42; } /* SPDX-License-Identifier: MIT | 显示禁用按钮状态。 */
+.button.primary { color: #0a120e; background: var(--acid); } /* SPDX-License-Identifier: MIT | 设置主要操作按钮。 */
+.button.secondary { color: var(--acid); border-color: var(--line-strong); background: rgba(199, 255, 89, .05); } /* SPDX-License-Identifier: MIT | 设置次要操作按钮。 */
+.upload-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } /* SPDX-License-Identifier: MIT | 创建双上传区布局。 */
+.dropzone { display: grid; place-items: center; min-height: 190px; padding: 25px; text-align: center; border: 1px dashed rgba(255, 255, 255, .17); border-radius: 14px; cursor: pointer; background: rgba(255, 255, 255, .018); transition: border-color .2s, background .2s; } /* SPDX-License-Identifier: MIT | 定义文件选择区域。 */
+.dropzone:hover { border-color: var(--line-strong); background: rgba(199, 255, 89, .035); } /* SPDX-License-Identifier: MIT | 提供文件区悬停反馈。 */
+.dropzone input { position: absolute; width: 1px; height: 1px; opacity: 0; } /* SPDX-License-Identifier: MIT | 隐藏原生文件输入但保留可访问标签触发。 */
+.dropzone strong, .dropzone small { display: block; } /* SPDX-License-Identifier: MIT | 将上传提示分行显示。 */
+.dropzone small { margin-top: 5px; color: var(--muted); font-weight: 400; } /* SPDX-License-Identifier: MIT | 设置上传格式说明。 */
+.drop-icon { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 15px; color: var(--acid); border: 1px solid var(--line-strong); border-radius: 50%; font-family: Consolas, monospace; font-size: 10px; } /* SPDX-License-Identifier: MIT | 绘制方案文件类型标识。 */
+.drop-icon.accent { color: var(--mint); border-color: rgba(91, 241, 189, .4); } /* SPDX-License-Identifier: MIT | 区分 Demo 上传标识。 */
+.artifact-list { display: grid; gap: 9px; margin-top: 18px; } /* SPDX-License-Identifier: MIT | 排列上传资料记录。 */
+.artifact-row { display: grid; grid-template-columns: 1fr auto auto; gap: 14px; align-items: center; padding: 12px 14px; border: 1px solid rgba(255, 255, 255, .07); border-radius: 9px; background: rgba(0, 0, 0, .13); } /* SPDX-License-Identifier: MIT | 设置单个资料记录。 */
+.artifact-row strong, .artifact-row small { display: block; } /* SPDX-License-Identifier: MIT | 将资料名称与标识分行。 */
+.artifact-row small, .empty-state { color: var(--muted); } /* SPDX-License-Identifier: MIT | 设置资料辅助文字。 */
+.tag { padding: 3px 8px; color: var(--acid); border: 1px solid var(--line); border-radius: 999px; font-family: Consolas, monospace; font-size: 9px; } /* SPDX-License-Identifier: MIT | 定义资料与答案状态标签。 */
+.remove-button, .text-button, .icon-button { color: var(--muted); border: 0; cursor: pointer; background: transparent; } /* SPDX-License-Identifier: MIT | 重置轻量操作按钮。 */
+.remove-button:hover, .text-button:hover, .icon-button:hover { color: var(--acid); } /* SPDX-License-Identifier: MIT | 提供轻量按钮悬停反馈。 */
+.question-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; color: var(--muted); font-size: 12px; } /* SPDX-License-Identifier: MIT | 排列问卷进度与批量操作。 */
+.text-button { padding: 6px 0; border-bottom: 1px solid currentColor; font-size: 12px; } /* SPDX-License-Identifier: MIT | 设置文字按钮样式。 */
+.text-button:disabled { opacity: .35; cursor: not-allowed; } /* SPDX-License-Identifier: MIT | 设置禁用文字按钮。 */
+.question-list { display: grid; gap: 12px; } /* SPDX-License-Identifier: MIT | 排列动态问卷项。 */
+.question-card { display: grid; grid-template-columns: minmax(180px, .72fr) minmax(0, 1.5fr); gap: 28px; padding: 22px; border: 1px solid rgba(255, 255, 255, .075); border-radius: 12px; background: rgba(0, 0, 0, .1); } /* SPDX-License-Identifier: MIT | 定义单个问卷卡片布局。 */
+.question-meta h3 { margin: 7px 0 5px; font-size: 15px; } /* SPDX-License-Identifier: MIT | 设置问卷问题标题。 */
+.question-meta p { margin: 0; color: var(--muted); font-size: 11px; } /* SPDX-License-Identifier: MIT | 设置问题业务用途。 */
+.question-control { display: grid; gap: 10px; } /* SPDX-License-Identifier: MIT | 排列答案控件与确认框。 */
+.guided-editor { display: grid; gap: 14px; padding: 16px; border: 1px solid rgba(199, 255, 89, .16); border-radius: 11px; background: rgba(199, 255, 89, .025); } /* SPDX-License-Identifier: MIT | 为第十三、十四、十六题提供清晰的引导式编辑区域。 */
+.guided-header { display: grid; gap: 3px; } /* SPDX-License-Identifier: MIT | 紧凑排列引导式编辑器标题与说明。 */
+.guided-header strong { color: #e9f0ed; font-size: 13px; } /* SPDX-License-Identifier: MIT | 提升引导式编辑器标题识别度。 */
+.editor-hint { margin: 0; color: var(--muted); font-size: 11px; font-weight: 400; } /* SPDX-License-Identifier: MIT | 使用短句说明字段用途并降低视觉负担。 */
+.editor-note { margin: 0; padding: 10px 12px; color: #aebbb6; border-left: 2px solid var(--line-strong); background: rgba(255, 255, 255, .025); font-size: 11px; } /* SPDX-License-Identifier: MIT | 就近解释预算与资金等易混概念。 */
+.quick-actions { display: flex; flex-wrap: wrap; gap: 8px; } /* SPDX-License-Identifier: MIT | 排列个人、小团队和模块状态快捷预设。 */
+.quick-button { min-height: 34px; padding: 0 11px; color: var(--acid); border: 1px solid rgba(199, 255, 89, .26); border-radius: 8px; background: rgba(199, 255, 89, .055); cursor: pointer; font-size: 11px; font-weight: 700; } /* SPDX-License-Identifier: MIT | 将快捷预设显示为低风险次级操作。 */
+.quick-button:hover { background: rgba(199, 255, 89, .11); } /* SPDX-License-Identifier: MIT | 提供快捷预设的悬停反馈。 */
+.quick-button:focus-visible { outline: 2px solid var(--acid); outline-offset: 2px; } /* SPDX-License-Identifier: MIT | 为键盘用户显示明确快捷按钮焦点。 */
+.guided-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } /* SPDX-License-Identifier: MIT | 以两列组织团队基础信息。 */
+.guided-grid.three-columns { grid-template-columns: repeat(3, minmax(0, 1fr)); } /* SPDX-License-Identifier: MIT | 以三列组织周期、预算与已落实资金。 */
+.guided-field { display: grid; gap: 6px; color: #c7d0cc; font-size: 11px; font-weight: 650; } /* SPDX-License-Identifier: MIT | 统一引导式字段标签与控件间距。 */
+.guided-field small { color: var(--muted); font-weight: 400; } /* SPDX-License-Identifier: MIT | 设置引导式字段补充说明。 */
+.guided-wide { grid-column: 1 / -1; } /* SPDX-License-Identifier: MIT | 允许计划状态占满整行。 */
+.choice-fieldset { min-width: 0; margin: 0; padding: 12px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 9px; } /* SPDX-License-Identifier: MIT | 语义化分组团队能力复选项。 */
+.choice-fieldset legend { padding: 0 6px; color: #dce6e2; font-size: 11px; font-weight: 750; } /* SPDX-License-Identifier: MIT | 设置团队能力分组标题。 */
+.choice-fieldset .editor-hint { margin-bottom: 9px; } /* SPDX-License-Identifier: MIT | 分隔团队能力提示与选项。 */
+.choice-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; } /* SPDX-License-Identifier: MIT | 紧凑排列团队能力复选项。 */
+.choice-option { display: flex; align-items: center; gap: 7px; min-height: 34px; padding: 0 9px; color: #c7d0cc; border: 1px solid rgba(255, 255, 255, .07); border-radius: 7px; background: rgba(0, 0, 0, .12); cursor: pointer; font-size: 10px; } /* SPDX-License-Identifier: MIT | 创建易点击且可扫描的团队能力选项。 */
+.choice-option input { width: 15px; min-height: 15px; margin: 0; padding: 0; accent-color: var(--acid); } /* SPDX-License-Identifier: MIT | 修正全局输入宽度并设置能力复选框尺寸。 */
+.choice-option span { display: grid; min-width: 0; gap: 2px; } /* SPDX-License-Identifier: MIT | 垂直排列知识库选项名称与稳定代码。 */
+.choice-option small { overflow: hidden; color: var(--muted); font-family: Consolas, monospace; font-size: 8px; text-overflow: ellipsis; } /* SPDX-License-Identifier: MIT | 以低干扰方式展示可审计类型和枚举代码。 */
+.genre-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); max-height: 420px; overflow: auto; padding-right: 4px; } /* SPDX-License-Identifier: MIT | 紧凑展示完整类型知识库并限制长列表高度。 */
+.genre-option { align-items: flex-start; min-height: 52px; padding-block: 8px; } /* SPDX-License-Identifier: MIT | 为类型中文名和代码提供足够点击空间。 */
+.genre-option strong { color: #dce6e2; font-size: 10px; } /* SPDX-License-Identifier: MIT | 强化游戏类型的可扫描中文名称。 */
+.feature-suggestions { display: grid; gap: 9px; padding: 12px; border: 1px solid rgba(199, 255, 89, .14); border-radius: 9px; background: rgba(199, 255, 89, .025); } /* SPDX-License-Identifier: MIT | 区分后端知识库建议与创作者自由输入区域。 */
+.feature-suggestions > strong { color: #dce6e2; font-size: 11px; } /* SPDX-License-Identifier: MIT | 设置玩法基线候选区标题。 */
+.feature-buttons .quick-button.selected { color: #0a130f; border-color: var(--acid); background: var(--acid); } /* SPDX-License-Identifier: MIT | 显示已经写入实际玩法机制的知识库候选。 */
+.knowledge-editor textarea { min-height: 150px; } /* SPDX-License-Identifier: MIT | 为实际机制和扩展特征保留可读编辑空间。 */
+.module-matrix { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } /* SPDX-License-Identifier: MIT | 将八个生产模块组织为紧凑矩阵。 */
+.module-row { display: grid; grid-template-columns: minmax(112px, 1fr) minmax(126px, .8fr); align-items: center; gap: 10px; padding: 9px 10px; border: 1px solid rgba(255, 255, 255, .07); border-radius: 8px; background: rgba(0, 0, 0, .12); color: #c7d0cc; font-size: 10px; } /* SPDX-License-Identifier: MIT | 对齐模块名称与成熟度选择器。 */
+.module-row select { min-height: 38px; padding: 0 9px; font-size: 10px; } /* SPDX-License-Identifier: MIT | 压缩模块选择器高度同时保留触控尺寸。 */
+.advanced-json { border-top: 1px solid rgba(255, 255, 255, .07); padding-top: 10px; } /* SPDX-License-Identifier: MIT | 将专业 JSON 模式与新手路径视觉分隔。 */
+.advanced-json summary { width: fit-content; color: #9eb0a9; cursor: pointer; font-size: 11px; font-weight: 650; } /* SPDX-License-Identifier: MIT | 提供低干扰但可发现的专业模式入口。 */
+.advanced-json[open] { display: grid; gap: 8px; } /* SPDX-License-Identifier: MIT | 展开后排列专业说明、编辑器与错误提示。 */
+.advanced-json .json-editor { min-height: 170px; font-family: Consolas, "Cascadia Code", monospace; font-size: 11px; line-height: 1.5; } /* SPDX-License-Identifier: MIT | 为专业 JSON 编辑提供可读等宽排版。 */
+.editor-error { min-height: 16px; margin: 0; color: #ff9b8f; font-size: 11px; } /* SPDX-License-Identifier: MIT | 在高级输入附近保留稳定的错误提示区域。 */
+.confirm-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; color: var(--muted); font-size: 11px; } /* SPDX-License-Identifier: MIT | 排列答案来源与确认操作。 */
+.confirm-check { display: flex; align-items: center; gap: 8px; color: #c7d0cc; cursor: pointer; } /* SPDX-License-Identifier: MIT | 设置创作者确认标签。 */
+.confirm-check input { width: 16px; min-height: 16px; accent-color: var(--acid); } /* SPDX-License-Identifier: MIT | 设置确认复选框尺寸与颜色。 */
+.report-placeholder { display: grid; place-items: center; min-height: 280px; color: var(--muted); text-align: center; } /* SPDX-License-Identifier: MIT | 定义报告空状态。 */
+.report-placeholder span { display: grid; place-items: center; width: 64px; height: 64px; margin-bottom: 15px; color: var(--acid); border: 1px solid var(--line-strong); border-radius: 18px 4px; font-weight: 900; } /* SPDX-License-Identifier: MIT | 绘制报告占位图形。 */
+.report-placeholder p { margin: 4px 0 0; font-size: 12px; } /* SPDX-License-Identifier: MIT | 设置报告占位说明。 */
+.report-actions { display: flex !important; gap: 16px !important; } /* SPDX-License-Identifier: MIT | 排列报告刷新和审计操作。 */
+.report-content { display: grid; gap: 18px; } /* SPDX-License-Identifier: MIT | 排列诊断报告模块。 */
+.report-hero { display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: center; padding: 24px; border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(120deg, rgba(199, 255, 89, .08), rgba(91, 241, 189, .025)); } /* SPDX-License-Identifier: MIT | 创建评分结论摘要。 */
+.rating-badge { display: grid; place-items: center; width: 120px; height: 120px; color: #0a120e; background: var(--acid); border-radius: 50%; font-family: Consolas, monospace; font-size: 24px; font-weight: 900; box-shadow: 0 0 50px rgba(199, 255, 89, .16); } /* SPDX-License-Identifier: MIT | 显示 D/C/B_GATE 结论。 */
+.report-hero h3 { margin: 0 0 7px; font-size: 28px; } /* SPDX-License-Identifier: MIT | 设置报告摘要标题。 */
+.report-hero p { margin: 0; color: var(--muted); font-size: 12px; } /* SPDX-License-Identifier: MIT | 设置评分规则和置信说明。 */
+.metric-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; } /* SPDX-License-Identifier: MIT | 排列报告关键指标。 */
+.metric { padding: 8px 12px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 7px; font-family: Consolas, monospace; font-size: 11px; } /* SPDX-License-Identifier: MIT | 定义单个报告指标。 */
+.report-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; } /* SPDX-License-Identifier: MIT | 创建报告双栏模块布局。 */
+.report-section { padding: 21px; border: 1px solid rgba(255, 255, 255, .075); border-radius: 12px; background: rgba(0, 0, 0, .1); } /* SPDX-License-Identifier: MIT | 定义报告内容分区。 */
+.report-section.full { grid-column: 1 / -1; } /* SPDX-License-Identifier: MIT | 让长报告分区占满宽度。 */
+.report-section h3 { margin: 0 0 15px; font-size: 14px; } /* SPDX-License-Identifier: MIT | 设置报告分区标题。 */
+.dna-list { display: grid; gap: 9px; } /* SPDX-License-Identifier: MIT | 排列九维评分条目。 */
+.dna-item { display: grid; grid-template-columns: 150px 1fr 24px; gap: 10px; align-items: center; color: var(--muted); font-size: 11px; } /* SPDX-License-Identifier: MIT | 定义单个维度评分布局。 */
+.bar { height: 5px; border-radius: 999px; background: rgba(255, 255, 255, .07); overflow: hidden; } /* SPDX-License-Identifier: MIT | 创建维度分数轨道。 */
+.bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--mint), var(--acid)); } /* SPDX-License-Identifier: MIT | 显示维度分数比例。 */
+.card-list { display: grid; gap: 9px; } /* SPDX-License-Identifier: MIT | 排列模块、角色与能力卡片。 */
+.mini-card { padding: 13px; border-left: 2px solid var(--line-strong); background: rgba(255, 255, 255, .025); } /* SPDX-License-Identifier: MIT | 定义报告明细卡片。 */
+.mini-card strong { display: block; font-size: 12px; } /* SPDX-License-Identifier: MIT | 设置明细卡片标题。 */
+.mini-card p { margin: 5px 0 0; color: var(--muted); font-size: 11px; } /* SPDX-License-Identifier: MIT | 设置明细卡片说明。 */
+.list-clean { margin: 0; padding-left: 18px; color: var(--muted); font-size: 12px; } /* SPDX-License-Identifier: MIT | 设置诊断问题和假设列表。 */
+.timeline { display: grid; gap: 0; } /* SPDX-License-Identifier: MIT | 创建制作和上架流程时间线。 */
+.timeline-item { position: relative; display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding-bottom: 18px; } /* SPDX-License-Identifier: MIT | 定义时间线步骤。 */
+.timeline-item:not(:last-child)::after { position: absolute; top: 28px; bottom: 0; left: 13px; width: 1px; background: var(--line); content: ""; } /* SPDX-License-Identifier: MIT | 连接相邻时间线步骤。 */
+.timeline-index { display: grid; place-items: center; width: 28px; height: 28px; color: var(--acid); border: 1px solid var(--line-strong); border-radius: 50%; font-family: Consolas, monospace; font-size: 10px; } /* SPDX-License-Identifier: MIT | 绘制时间线序号。 */
+.timeline-item strong { font-size: 12px; } /* SPDX-License-Identifier: MIT | 设置时间线步骤名称。 */
+.timeline-item p { margin: 2px 0; color: var(--muted); font-size: 11px; } /* SPDX-License-Identifier: MIT | 设置时间线步骤说明。 */
+.toast { position: fixed; right: 24px; bottom: 24px; z-index: 40; max-width: min(420px, calc(100% - 48px)); padding: 13px 16px; color: #0a120e; border-radius: 9px; background: var(--acid); box-shadow: var(--shadow); font-size: 12px; font-weight: 700; opacity: 0; transform: translateY(20px); pointer-events: none; transition: .25s ease; } /* SPDX-License-Identifier: MIT | 定义异步状态提示。 */
+.toast.visible { opacity: 1; transform: translateY(0); } /* SPDX-License-Identifier: MIT | 显示状态提示。 */
+.toast.error { color: white; background: #b83b34; } /* SPDX-License-Identifier: MIT | 设置错误状态提示。 */
+dialog { width: min(760px, calc(100% - 32px)); max-height: 82vh; padding: 0; color: var(--text); border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); } /* SPDX-License-Identifier: MIT | 定义审计对话框。 */
+dialog::backdrop { background: rgba(0, 0, 0, .72); backdrop-filter: blur(8px); } /* SPDX-License-Identifier: MIT | 设置对话框背景遮罩。 */
+.dialog-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, .07); } /* SPDX-License-Identifier: MIT | 排列审计对话框标题。 */
+.dialog-head > div { display: flex; align-items: center; gap: 12px; } /* SPDX-License-Identifier: MIT | 排列审计标签与标题。 */
+.dialog-head h2 { margin: 0; font-size: 19px; } /* SPDX-License-Identifier: MIT | 设置审计标题。 */
+.icon-button { font-size: 26px; } /* SPDX-License-Identifier: MIT | 设置关闭按钮尺寸。 */
+.audit-content { display: grid; gap: 12px; padding: 24px; overflow: auto; } /* SPDX-License-Identifier: MIT | 排列审计事件并允许滚动。 */
+.audit-event { padding: 13px; border: 1px solid rgba(255, 255, 255, .07); border-radius: 8px; } /* SPDX-License-Identifier: MIT | 定义单个审计事件。 */
+.audit-event strong { color: var(--acid); font-family: Consolas, monospace; font-size: 11px; } /* SPDX-License-Identifier: MIT | 设置审计事件类型。 */
+.audit-event p { margin: 5px 0 0; color: var(--muted); font-size: 11px; word-break: break-word; } /* SPDX-License-Identifier: MIT | 设置审计载荷与时间。 */
+footer { display: flex; justify-content: space-between; gap: 18px; padding: 30px clamp(20px, 5vw, 72px); color: #60706a; border-top: 1px solid rgba(255, 255, 255, .05); font-family: Consolas, monospace; font-size: 9px; letter-spacing: .08em; } /* SPDX-License-Identifier: MIT | 设置版本化页脚。 */
+@media (max-width: 1000px) { .guided-grid.three-columns, .choice-grid, .genre-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .module-matrix { grid-template-columns: 1fr; } } /* SPDX-License-Identifier: MIT | 在中等宽度下减少引导式表单和类型知识库列数。 */
+@media (max-width: 800px) { .steps { grid-template-columns: repeat(2, 1fr); } .step:nth-child(2) { border-right: 0; } .step:nth-child(-n+2) { border-bottom: 1px solid rgba(255, 255, 255, .06); } .form-grid, .upload-grid, .report-grid, .question-card, .guided-grid, .guided-grid.three-columns { grid-template-columns: 1fr; } .panel-head { display: grid; } .panel-head p { text-align: left; } .report-hero { grid-template-columns: 1fr; } .rating-badge { width: 96px; height: 96px; } } /* SPDX-License-Identifier: MIT | 将复杂布局适配平板和手机。 */
+@media (max-width: 620px) { .choice-grid { grid-template-columns: 1fr; } .module-row { grid-template-columns: 1fr; } .quick-actions { display: grid; grid-template-columns: 1fr; } } /* SPDX-License-Identifier: MIT | 在手机上将能力、模块和快捷操作改为单列。 */
+@media (max-width: 520px) { .topbar { padding: 14px 16px; } .connection-pill { max-width: 140px; } #connectionText { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } main { width: min(100% - 20px, 1180px); } .hero { padding-top: 64px; } .hero h1 { font-size: 43px; } .boundary { display: block; } .panel { padding: 20px 16px; } .question-toolbar, .confirm-row, footer { align-items: flex-start; flex-direction: column; } .artifact-row { grid-template-columns: 1fr auto; } .artifact-row .tag { display: none; } .dna-item { grid-template-columns: 110px 1fr 18px; } } /* SPDX-License-Identifier: MIT | 优化窄屏内容密度和可读性。 */
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; } } /* SPDX-License-Identifier: MIT | 尊重用户减少动画偏好。 */
+
+/* SPDX-License-Identifier: MIT | 以下样式复用 GameForge 平台原型的工作台视觉语言，并仅影响本评分 Agent 页面。 */
+:root { --violet: #8a74ff; --panel: rgba(18, 20, 27, .86); --subtle: #65706d; } /* SPDX-License-Identifier: MIT | 补充平台原型所需的紫色、面板和弱化文字令牌。 */
+body { background: radial-gradient(circle at 80% 8%, rgba(138, 116, 255, .13), transparent 27rem), radial-gradient(circle at 8% 70%, rgba(199, 255, 89, .06), transparent 30rem), #0b0c10; } /* SPDX-License-Identifier: MIT | 将评分页背景调整为平台原型的深色层次。 */
+.ambient-one { background: var(--violet); opacity: .11; } /* SPDX-License-Identifier: MIT | 使用紫色环境光呼应平台视觉。 */
+.ambient-two { background: var(--acid); opacity: .06; } /* SPDX-License-Identifier: MIT | 使用低亮绿色环境光保留品牌识别。 */
+.topbar { z-index: 40; display: grid; grid-template-columns: minmax(190px, 1fr) auto minmax(250px, 1fr); gap: 20px; min-height: 76px; padding: 0 clamp(18px, 3vw, 34px); border-bottom-color: var(--line); background: rgba(11, 12, 16, .82); backdrop-filter: blur(22px) saturate(1.2); } /* SPDX-License-Identifier: MIT | 重建平台原型的三栏顶栏而不改变连接状态元素。 */
+.brand { width: max-content; padding: 0; } /* SPDX-License-Identifier: MIT | 让品牌区域保持原型的紧凑比例。 */
+.brand-mark { position: relative; display: block; width: 34px; height: 34px; color: inherit; border-radius: 0; background: transparent; transform: rotate(45deg); } /* SPDX-License-Identifier: MIT | 将品牌标记改为平台原型的四格菱形。 */
+.brand-mark i { position: absolute; width: 14px; height: 14px; border-radius: 3px; background: var(--acid); } /* SPDX-License-Identifier: MIT | 绘制四格品牌标记的单个方块。 */
+.brand-mark i:nth-child(1) { top: 0; left: 0; } /* SPDX-License-Identifier: MIT | 放置左上品牌方块。 */
+.brand-mark i:nth-child(2) { top: 0; right: 0; opacity: .42; } /* SPDX-License-Identifier: MIT | 放置右上半透明品牌方块。 */
+.brand-mark i:nth-child(3) { bottom: 0; left: 0; opacity: .42; } /* SPDX-License-Identifier: MIT | 放置左下半透明品牌方块。 */
+.brand-mark i:nth-child(4) { right: 0; bottom: 0; } /* SPDX-License-Identifier: MIT | 放置右下品牌方块。 */
+.brand-copy { display: flex; align-items: baseline; gap: 7px; letter-spacing: .08em; } /* SPDX-License-Identifier: MIT | 将品牌主名称和 AI 标识排为同一行。 */
+.brand-copy strong, .brand-copy small { display: inline; } /* SPDX-License-Identifier: MIT | 覆盖旧双行品牌文字规则。 */
+.brand-copy strong { font-size: 15px; } /* SPDX-License-Identifier: MIT | 设置平台原型主品牌字号。 */
+.brand-copy small { color: var(--acid); font-size: 11px; font-weight: 800; letter-spacing: .08em; } /* SPDX-License-Identifier: MIT | 突出 AI 标识。 */
+.main-nav { display: flex; align-self: stretch; } /* SPDX-License-Identifier: MIT | 在顶栏中居中放置页内导航。 */
+.nav-item { position: relative; min-width: 112px; padding: 0 18px; color: var(--muted); font-size: 13px; text-align: center; } /* SPDX-License-Identifier: MIT | 设置平台式导航项的触控与文字区域。 */
+.nav-item span, .nav-item small { display: block; } /* SPDX-License-Identifier: MIT | 分行呈现导航名称与说明。 */
+.nav-item span { padding-top: 17px; font-weight: 700; } /* SPDX-License-Identifier: MIT | 强化导航主名称。 */
+.nav-item small { margin-top: 1px; color: var(--subtle); font-size: 9px; letter-spacing: .1em; } /* SPDX-License-Identifier: MIT | 弱化导航辅助说明。 */
+.nav-item::after { position: absolute; right: 23px; bottom: 0; left: 23px; height: 2px; border-radius: 4px 4px 0 0; background: var(--acid); content: ""; transform: scaleX(0); transition: transform .2s ease; } /* SPDX-License-Identifier: MIT | 添加与原型一致的活动导航下划线。 */
+.nav-item:hover, .nav-item.active { color: var(--text); } /* SPDX-License-Identifier: MIT | 显示导航悬停和当前状态。 */
+.nav-item.active small { color: var(--acid); } /* SPDX-License-Identifier: MIT | 用品牌绿色标识当前工作台。 */
+.nav-item.active::after { transform: scaleX(1); } /* SPDX-License-Identifier: MIT | 显示当前导航的下划线。 */
+.top-actions { justify-self: end; display: flex; align-items: center; gap: 9px; } /* SPDX-License-Identifier: MIT | 对齐批次提示和连接状态。 */
+.release-countdown { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 13px; color: var(--muted); border: 1px solid var(--line); border-radius: 10px; background: rgba(255, 255, 255, .035); font-size: 11px; } /* SPDX-License-Identifier: MIT | 使用原型样式显示评分通道状态。 */
+.release-countdown strong { color: var(--text); font-size: 12px; } /* SPDX-License-Identifier: MIT | 突出评分通道是否开放。 */
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 14px var(--mint); } /* SPDX-License-Identifier: MIT | 显示通道开放的发光状态点。 */
+.connection-pill { padding: 8px 11px; border-color: var(--line); background: rgba(255, 255, 255, .035); } /* SPDX-License-Identifier: MIT | 使真实连接状态融入平台顶栏。 */
+.page-shell { width: min(1440px, calc(100% - 64px)); padding: 38px 0 110px; } /* SPDX-License-Identifier: MIT | 使用平台原型的宽工作区和底部留白。 */
+.workbench-hero { display: grid; grid-template-columns: minmax(0, 1.22fr) minmax(340px, .78fr); gap: clamp(26px, 5vw, 74px); align-items: center; padding: 25px 0 38px; } /* SPDX-License-Identifier: MIT | 以左右两栏呈现评分说明和 Agent 流程。 */
+.hero h1 { max-width: 760px; margin-top: 17px; font-size: clamp(42px, 5.5vw, 76px); } /* SPDX-License-Identifier: MIT | 调整主标题以适配平台工作台布局。 */
+.hero > p, .hero-copy > p { max-width: 710px; font-size: clamp(15px, 1.5vw, 18px); } /* SPDX-License-Identifier: MIT | 限制说明文字宽度以提高可读性。 */
+.eyebrow { display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 10px; font-weight: 800; letter-spacing: .16em; } /* SPDX-License-Identifier: MIT | 改为平台原型的工程化眉题排版。 */
+.eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--acid); box-shadow: 0 0 14px var(--acid); } /* SPDX-License-Identifier: MIT | 为评分 Agent 标签添加状态光点。 */
+.boundary { max-width: 760px; margin-top: 24px; border: 1px solid rgba(255, 209, 102, .2); border-left: 2px solid var(--warning); border-radius: 8px; } /* SPDX-License-Identifier: MIT | 让业务边界说明成为清晰的提示卡片。 */
+.agent-overview { padding: 18px; border: 1px solid var(--line); border-radius: 17px; background: linear-gradient(145deg, rgba(28, 29, 39, .92), rgba(14, 15, 20, .91)); box-shadow: 0 28px 70px rgba(0, 0, 0, .3); } /* SPDX-License-Identifier: MIT | 创建与平台原型一致的评分 Agent 概览卡。 */
+.agent-overview-head { display: grid; grid-template-columns: auto 1fr auto; gap: 11px; align-items: center; padding: 3px 4px 16px; border-bottom: 1px solid var(--line); } /* SPDX-License-Identifier: MIT | 对齐 Agent 图形、名称和运行状态。 */
+.agent-orb { display: grid; place-items: center; width: 40px; height: 40px; color: #151716; border-radius: 12px; background: linear-gradient(145deg, var(--acid), #9fd743); font-size: 11px; font-weight: 900; } /* SPDX-License-Identifier: MIT | 使用纯 CSS 绘制无需外部素材的 Agent 图标。 */
+.agent-overview-head strong, .agent-overview-head small { display: block; } /* SPDX-License-Identifier: MIT | 分行呈现 Agent 名称和能力说明。 */
+.agent-overview-head strong { font-size: 13px; } /* SPDX-License-Identifier: MIT | 设置 Agent 名称字号。 */
+.agent-overview-head small { margin-top: 2px; color: var(--muted); font-size: 9px; } /* SPDX-License-Identifier: MIT | 设置 Agent 能力说明字号。 */
+.overview-live { padding: 4px 7px; color: var(--acid); border: 1px solid rgba(216, 255, 88, .22); border-radius: 999px; background: rgba(216, 255, 88, .07); font-size: 9px; } /* SPDX-License-Identifier: MIT | 显示尚未接入时的温和状态标记。 */
+.agent-flow { display: grid; gap: 4px; margin: 0; padding: 15px 0 10px; list-style: none; } /* SPDX-License-Identifier: MIT | 垂直排列评分流程而不使用浏览器默认编号。 */
+.agent-flow li { display: grid; grid-template-columns: 27px 1fr; gap: 10px; align-items: center; padding: 9px; color: var(--muted); border-radius: 10px; } /* SPDX-License-Identifier: MIT | 为每个真实流程步骤提供可扫描的行布局。 */
+.agent-flow li.active { color: var(--text); background: rgba(216, 255, 88, .07); } /* SPDX-License-Identifier: MIT | 突出当前可开始的项目接入步骤。 */
+.agent-flow b { display: grid; place-items: center; width: 25px; height: 25px; color: var(--acid); border: 1px solid var(--line-strong); border-radius: 8px; font-family: Consolas, monospace; font-size: 9px; } /* SPDX-License-Identifier: MIT | 显示流程步骤编号。 */
+.agent-flow strong, .agent-flow small { display: block; } /* SPDX-License-Identifier: MIT | 分行呈现流程标题和说明。 */
+.agent-flow strong { font-size: 11px; } /* SPDX-License-Identifier: MIT | 设置流程标题的清晰层级。 */
+.agent-flow small { margin-top: 1px; color: var(--subtle); font-size: 9px; } /* SPDX-License-Identifier: MIT | 设置流程说明的低干扰层级。 */
+.overview-note { display: flex; justify-content: space-between; gap: 12px; padding: 11px; color: var(--muted); border-radius: 9px; background: rgba(255, 255, 255, .035); font-size: 9px; } /* SPDX-License-Identifier: MIT | 提醒创作者真人评分的开放条件。 */
+.overview-note strong { color: #d9e3de; font-size: 9px; text-align: right; } /* SPDX-License-Identifier: MIT | 强化真人评分门槛说明。 */
+.steps { margin-top: 2px; border-color: var(--line); background: rgba(255, 255, 255, .025); } /* SPDX-License-Identifier: MIT | 让真实表单步骤衔接平台视觉语言。 */
+.panel { border-color: var(--line); border-radius: 17px; background: linear-gradient(145deg, rgba(24, 26, 34, .9), rgba(13, 15, 19, .94)); } /* SPDX-License-Identifier: MIT | 将功能面板调整为平台原型的深色卡片。 */
+.panel::before { width: 112px; background: linear-gradient(90deg, var(--acid), var(--violet)); } /* SPDX-License-Identifier: MIT | 用品牌双强调线标示每个功能面板。 */
+.section-index { border-color: rgba(216, 255, 88, .28); background: rgba(216, 255, 88, .05); } /* SPDX-License-Identifier: MIT | 将步骤编号融入平台卡片风格。 */
+@media (max-width: 1000px) { .topbar { grid-template-columns: auto 1fr auto; } .main-nav { justify-content: center; } .workbench-hero { grid-template-columns: 1fr; } .agent-overview { max-width: 720px; } } /* SPDX-License-Identifier: MIT | 在平板宽度将工作台概览切换为单列。 */
+@media (max-width: 720px) { .page-shell { width: min(100% - 28px, 1440px); padding-top: 24px; } .topbar { min-height: 66px; gap: 8px; padding: 0 12px; } .main-nav { display: none; } .release-countdown { display: none; } .connection-pill { max-width: 160px; } .workbench-hero { padding-top: 8px; } .hero h1 { font-size: clamp(40px, 13vw, 58px); } } /* SPDX-License-Identifier: MIT | 在手机上保留品牌和连接状态并隐藏次要导航。 */
