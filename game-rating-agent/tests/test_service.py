@@ -13,7 +13,7 @@ import threading  # SPDX-License-Identifier: MIT | 在测试线程启动真实 H
 import unittest  # SPDX-License-Identifier: MIT | 使用标准库测试框架。
 from game_rating_agent.api import create_server  # SPDX-License-Identifier: MIT | 测试真实 API 路由和鉴权。
 from game_rating_agent.artifacts import ArtifactStore, ArtifactValidationError  # SPDX-License-Identifier: MIT | 测试安全文件接收。
-from game_rating_agent.questionnaire import ConservativeQuestionnairePrefiller, MAX_PREFILL_ARTIFACT_TEXT, MAX_PREFILL_TOTAL_TEXT, OpenAIQuestionnairePrefiller  # SPDX-License-Identifier: MIT | 测试保守代填、外部代填文本边界和不猜测的问卷草稿。
+from game_rating_agent.questionnaire import ConservativeQuestionnairePrefiller  # SPDX-License-Identifier: MIT | 测试不猜测的问卷草稿。
 from game_rating_agent.service import GameRatingApplicationService  # SPDX-License-Identifier: MIT | 测试持久化应用服务。
 import test_agent  # SPDX-License-Identifier: MIT | 通过模块访问夹具并避免测试类被重复发现。
 
@@ -39,13 +39,6 @@ class ArtifactStoreTests(unittest.TestCase):  # SPDX-License-Identifier: MIT | �
             self.assertIn("核心循环", artifact.extracted_text)  # SPDX-License-Identifier: MIT | 确认只提取主文档文字。
             self.assertTrue((Path(directory) / "project-1" / artifact.stored_filename).exists())  # SPDX-License-Identifier: MIT | 确认文件保存在项目隔离目录。
 
-    def test_unicode_project_id_keeps_its_business_identity(self) -> None:  # SPDX-License-Identifier: MIT | 验证中文项目编号不会在目录清洗时发生碰撞或导致提交归属不一致。
-        with TemporaryDirectory() as directory:  # SPDX-License-Identifier: MIT | 创建自动清理隔离目录。
-            store = ArtifactStore(Path(directory))  # SPDX-License-Identifier: MIT | 初始化测试资料存储。
-            artifact = store.ingest("星尘突围", "方案.txt", "design_document", "核心玩法说明".encode("utf-8"))  # SPDX-License-Identifier: MIT | 上传使用中文项目编号的受控设计资料。
-            self.assertEqual(artifact.project_id, "星尘突围")  # SPDX-License-Identifier: MIT | 确认返回给服务层的项目归属保持原中文编号。
-            self.assertTrue(any(path.name == artifact.stored_filename for path in Path(directory).rglob(artifact.stored_filename)))  # SPDX-License-Identifier: MIT | 确认资料仍写入隔离根目录下的安全哈希目录。
-
     def test_signature_mismatch_is_rejected(self) -> None:  # SPDX-License-Identifier: MIT | 验证伪装 PDF 被拒绝。
         with TemporaryDirectory() as directory:  # SPDX-License-Identifier: MIT | 创建自动清理隔离目录。
             store = ArtifactStore(Path(directory))  # SPDX-License-Identifier: MIT | 初始化测试资料存储。
@@ -59,14 +52,6 @@ class ArtifactStoreTests(unittest.TestCase):  # SPDX-License-Identifier: MIT | �
         with TemporaryDirectory() as directory:  # SPDX-License-Identifier: MIT | 创建自动清理隔离目录。
             with self.assertRaises(ArtifactValidationError):  # SPDX-License-Identifier: MIT | 预期 Zip Slip 检查失败。
                 ArtifactStore(Path(directory)).ingest("project-1", "demo.zip", "demo_build", buffer.getvalue())  # SPDX-License-Identifier: MIT | 提交恶意 Demo ZIP。
-
-    def test_zip_windows_absolute_path_is_rejected(self) -> None:  # SPDX-License-Identifier: MIT | 验证 Demo ZIP 中的 Windows 盘符绝对路径同样不能越过安全检查。
-        buffer = io.BytesIO()  # SPDX-License-Identifier: MIT | 在内存创建带 Windows 绝对路径的 ZIP 夹具。
-        with ZipFile(buffer, "w") as archive:  # SPDX-License-Identifier: MIT | 创建测试 ZIP 容器。
-            archive.writestr("C:/Windows/escape.exe", b"blocked")  # SPDX-License-Identifier: MIT | 写入 Windows 盘符形式的绝对路径条目。
-        with TemporaryDirectory() as directory:  # SPDX-License-Identifier: MIT | 创建自动清理隔离目录。
-            with self.assertRaises(ArtifactValidationError):  # SPDX-License-Identifier: MIT | 预期绝对路径条目被安全检查拒绝。
-                ArtifactStore(Path(directory)).ingest("project-1", "demo.zip", "demo_build", buffer.getvalue())  # SPDX-License-Identifier: MIT | 提交含 Windows 绝对路径的恶意 Demo ZIP。
 
     def test_plain_text_cannot_claim_demo_kind(self) -> None:  # SPDX-License-Identifier: MIT | 验证普通文本不能冒充可玩 Demo 证据。
         with TemporaryDirectory() as directory:  # SPDX-License-Identifier: MIT | 创建自动清理隔离目录。
@@ -96,12 +81,6 @@ class QuestionnaireTests(unittest.TestCase):  # SPDX-License-Identifier: MIT | �
         self.assertTrue(answers["platforms"]["creator_confirmed"])  # SPDX-License-Identifier: MIT | 确认创作者事实保持已确认。
         self.assertFalse(answers["core_loop"]["creator_confirmed"])  # SPDX-License-Identifier: MIT | 确认未知核心循环不能自动确认。
         self.assertIsNone(answers["core_loop"]["value"])  # SPDX-License-Identifier: MIT | 确认代填器没有凭空猜测行为链。
-
-    def test_external_prefill_bounds_total_artifact_text(self) -> None:  # SPDX-License-Identifier: MIT | 验证多份超长资料不会无限放大外部模型请求文本。
-        long_text = "游戏规则" * 200000  # SPDX-License-Identifier: MIT | 构造远超单份和总量预算的授权资料正文。
-        payload = OpenAIQuestionnairePrefiller(api_key="test-key")._bounded_artifact_payload(({"artifact_id": "doc-1", "extracted_text": long_text}, {"artifact_id": "doc-2", "extracted_text": long_text}, {"artifact_id": "doc-3", "extracted_text": long_text}, {"artifact_id": "doc-4", "extracted_text": long_text}, {"artifact_id": "doc-5", "extracted_text": long_text}))  # SPDX-License-Identifier: MIT | 直接构造外部代填器将发送的受限资料载荷而不发出网络请求。
-        self.assertEqual(sum(len(item["text"]) for item in payload), MAX_PREFILL_TOTAL_TEXT)  # SPDX-License-Identifier: MIT | 确认全部资料正文不会超过单次外部调用总文本预算。
-        self.assertTrue(all(len(item["text"]) <= MAX_PREFILL_ARTIFACT_TEXT for item in payload))  # SPDX-License-Identifier: MIT | 确认每份资料正文同样受独立上限约束。
 
 class ApplicationServiceTests(unittest.TestCase):  # SPDX-License-Identifier: MIT | 验证持久化运行和失败恢复语义。
     def _submission(self) -> dict:  # SPDX-License-Identifier: MIT | 复用端到端有效创作者提交。

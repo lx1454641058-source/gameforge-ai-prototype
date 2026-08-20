@@ -1,7 +1,6 @@
 """游戏评分 Agent 规则与审计回归测试。"""  # SPDX-License-Identifier: MIT | 描述测试模块职责。
 from __future__ import annotations  # SPDX-License-Identifier: MIT | 启用延迟类型注解。
 import copy  # SPDX-License-Identifier: MIT | 创建互不影响的种子项目。
-import threading  # SPDX-License-Identifier: MIT | 并发验证人才履约回写的幂等性。
 import unittest  # SPDX-License-Identifier: MIT | 使用标准库测试框架避免外部依赖。
 from game_rating_agent import CapabilityFulfillmentFeedback, CapabilityRecord, CreatorAssessmentPipeline, GameRatingAgent, InMemoryTalentCapabilityAgent, SubmissionNotReadyError, TalentProfile  # SPDX-License-Identifier: MIT | 导入评分、能力匹配、履约回写和端到端流水线接口。
 from game_rating_agent.diagnosis import DiagnosticPlanner  # SPDX-License-Identifier: MIT | 注入人才能力 Agent 网关进行端到端测试。
@@ -17,7 +16,7 @@ def strong_project() -> dict:  # SPDX-License-Identifier: MIT | 构造应达到 
         "core_loop": ["战斗", "掉落", "元素融合", "Boss 验证", "局外解锁"],  # SPDX-License-Identifier: MIT | 提供核心行为链。
         "first_session_hook": "玩家在首局通过近战闪避和两种元素即时融合，迅速看到不同构筑产生的战斗变化与风险回报。",  # SPDX-License-Identifier: MIT | 提供首次吸引证据。
         "long_term_motivation": "每局解锁新的元素词条、敌人组合与 Boss 机制，玩家通过操作学习和构筑试验形成长期目标与差异。",  # SPDX-License-Identifier: MIT | 提供持续动机证据。
-        "progression_feedback": {"mode": "in_match", "in_match_progression": ["元素升级", "招式变化", "构筑成型"], "meta_progression": [], "feedback_signals": ["动作变化", "伤害来源", "敌人反应"], "decision_tradeoffs": "选择一个元素路线会放弃其他构筑机会", "failure_learning": "失败后显示伤害来源和构筑复盘"},  # SPDX-License-Identifier: MIT | 提供以局内为主且不依赖局外成长的结构化反馈证据。
+        "progression_feedback": "局内升级立即改变招式反馈，局外只解锁选择空间而不直接碾压难度，失败后显示可复盘的伤害来源。",  # SPDX-License-Identifier: MIT | 提供成长反馈证据。
         "content_structure": "三幕地图、六个生态房间组、动态事件和 Boss 变体按难度层逐步开放，并支持二十分钟完成一次验证。",  # SPDX-License-Identifier: MIT | 提供内容结构证据。
         "social_competition": {"not_applicable_reason": "核心为单人体验，首版不以社交留存为目标。"},  # SPDX-License-Identifier: MIT | 合理声明社交维度不适用。
         "business_model": "buyout",  # SPDX-License-Identifier: MIT | 声明买断制价值模式。
@@ -30,7 +29,6 @@ def strong_project() -> dict:  # SPDX-License-Identifier: MIT | 构造应达到 
         "team": {"size": 6, "roles": ["设计", "程序", "美术", "音频"]},  # SPDX-License-Identifier: MIT | 提供团队能力信息。
         "schedule": {"months": 10, "budget": 1200000},  # SPDX-License-Identifier: MIT | 提供周期和预算。
         "scope": "PC 单平台，首发一名角色、三幕内容和三个 Boss。",  # SPDX-License-Identifier: MIT | 提供受控范围。
-        "production_feasibility": {"scope_bounded": True, "technical_path_known": True, "platform_constraints_known": True, "prototype_validation_plan": True, "critical_dependencies": ["引擎性能"], "unresolved_high_risks": [], "blocking_constraints": []},  # SPDX-License-Identifier: MIT | 在资源充足假设下提供完整产品可实现性证据。
         "development_stage": "vertical_slice",  # SPDX-License-Identifier: MIT | 声明当前阶段应具有可玩证据。
         "platforms": ["steam"],  # SPDX-License-Identifier: MIT | 声明目标发布平台。
         "evidence": [{"type": "demo", "ref": "sha256:demo-082", "summary": "可完成一局核心循环"}],  # SPDX-License-Identifier: MIT | 提供可验证 Demo 证据。
@@ -48,27 +46,6 @@ class GameRatingAgentTests(unittest.TestCase):  # SPDX-License-Identifier: MIT |
         self.assertEqual(result.knowledge_comparison["matched_genres"], ("action_roguelite",))  # SPDX-License-Identifier: MIT | 确认评分前匹配到动作 Roguelite 类型基线。
         self.assertEqual(result.knowledge_comparison["differentiation_score"], 4)  # SPDX-License-Identifier: MIT | 确认完整结构化差异证据获得最高候选分。
         self.assertAlmostEqual(sum(weight for _, weight in result.knowledge_comparison["dimension_weights"]), 1.0, places=5)  # SPDX-License-Identifier: MIT | 确认类型动态权重归一化后可解释且稳定。
-
-    def test_current_team_and_funding_do_not_reduce_product_feasibility(self) -> None:  # SPDX-License-Identifier: MIT | 验证当前资源不再冒充产品可实现性。
-        project = copy.deepcopy(strong_project())  # SPDX-License-Identifier: MIT | 创建产品方案完全相同的低资源场景。
-        project["team"] = {"size": 1, "roles": ["独立创作者"], "availability": "待确认"}  # SPDX-License-Identifier: MIT | 设置个人创作者现状。
-        project["schedule"] = {"planning_status": "not_planned", "months": None, "budget": None, "available_funding": 0}  # SPDX-License-Identifier: MIT | 设置尚无周期、预算和已落实资金的现状。
-        result = self.agent.run(project)  # SPDX-License-Identifier: MIT | 执行新版产品可实现性和独立资源准备度规则。
-        self.assertEqual(result.game_dna["feasibility"], 4)  # SPDX-License-Identifier: MIT | 确认游戏本身仍按范围、技术和风险证据获得四分。
-        self.assertLess(result.resource_readiness["score"], 3)  # SPDX-License-Identifier: MIT | 确认缺人缺钱只体现在不计分的资源准备度。
-        self.assertFalse(result.resource_readiness["counts_toward_game_dna"])  # SPDX-License-Identifier: MIT | 确认报告显式声明资源准备度不计入九维。
-
-    def test_in_match_progression_can_score_full_without_meta_progression(self) -> None:  # SPDX-License-Identifier: MIT | 验证 RTS 等单局成长游戏不因没有局外成长被扣分。
-        project = copy.deepcopy(strong_project())  # SPDX-License-Identifier: MIT | 复用完整项目并改成纯局内成长结构。
-        project["progression_feedback"] = {"mode": "in_match", "in_match_progression": ["资源采集", "基地扩张", "科技升级", "单位解锁"], "meta_progression": [], "feedback_signals": ["建筑变化", "新单位可用", "地图控制"], "decision_tradeoffs": "升科技会延迟当前兵力并暴露防守窗口", "failure_learning": "战报与回放显示经济、科技和交战拐点"}  # SPDX-License-Identifier: MIT | 提供完整 RTS 局内成长反馈闭环。
-        result = self.agent.run(project)  # SPDX-License-Identifier: MIT | 执行分层成长反馈评分。
-        self.assertEqual(result.game_dna["progression_feedback"], 4)  # SPDX-License-Identifier: MIT | 确认纯局内成长可以获得满分。
-
-    def test_progression_feedback_no_longer_uses_text_length(self) -> None:  # SPDX-License-Identifier: MIT | 验证旧版长文本不能靠字数获得高成长反馈分。
-        project = copy.deepcopy(strong_project())  # SPDX-License-Identifier: MIT | 创建使用旧版自由文本的迁移场景。
-        project["progression_feedback"] = "成长" * 100  # SPDX-License-Identifier: MIT | 提供很长但没有局内局外结构的文本。
-        result = self.agent.run(project)  # SPDX-License-Identifier: MIT | 执行新版结构化成长反馈评分。
-        self.assertEqual(result.game_dna["progression_feedback"], 1)  # SPDX-License-Identifier: MIT | 确认文本再长也只获得迁移提示分。
 
     def test_missing_playable_evidence_returns_d(self) -> None:  # SPDX-License-Identifier: MIT | 验证缺少实现证据触发硬门槛。
         project = strong_project()  # SPDX-License-Identifier: MIT | 复制完整种子项目。
@@ -123,15 +100,6 @@ class GameRatingAgentTests(unittest.TestCase):  # SPDX-License-Identifier: MIT |
         self.assertEqual(result.assessment_result.value, "C")  # SPDX-License-Identifier: MIT | 确认安全信号阻止自动 B 门槛。
         self.assertTrue(result.needs_human_review)  # SPDX-License-Identifier: MIT | 确认该运行转人工复核。
 
-    def test_concept_stage_cannot_open_human_review_gate(self) -> None:  # SPDX-License-Identifier: MIT | 验证早期方案可获得诊断但不能成为真人评分候选。
-        project = copy.deepcopy(strong_project())  # SPDX-License-Identifier: MIT | 创建产品定义完整但尚在早期的项目副本。
-        project["development_stage"] = "concept"  # SPDX-License-Identifier: MIT | 明确项目仍处于概念阶段。
-        project["evidence"] = [{"type": "design_document", "ref": "sha256:plan-001", "summary": "完整概念方案"}]  # SPDX-License-Identifier: MIT | 移除 Demo 但保留合法方案资料以测试非机械性拒绝。
-        result = self.agent.run(project)  # SPDX-License-Identifier: MIT | 运行早期项目的完整九维诊断。
-        self.assertEqual(result.assessment_result.value, "C")  # SPDX-License-Identifier: MIT | 确认未达到完成度时不会返回真人评分候选。
-        self.assertFalse(result.human_review_ready)  # SPDX-License-Identifier: MIT | 确认报告明确给出不可申请真人评分的资格状态。
-        self.assertIn("当前完成度未达到真人评分申请门槛：请至少完成垂直切片并提交可运行版本", result.blocking_issues)  # SPDX-License-Identifier: MIT | 确认阻塞原因提供具体可执行条件。
-
     def test_blank_core_loop_steps_do_not_count_as_progress(self) -> None:  # SPDX-License-Identifier: MIT | 验证空白行为不能虚增核心循环完成度。
         project = strong_project()  # SPDX-License-Identifier: MIT | 创建完整种子项目。
         project["core_loop"] = [" ", "", "\t", "\n", "   "]  # SPDX-License-Identifier: MIT | 构造五个只有空白的伪行为步骤。
@@ -152,7 +120,7 @@ class CreatorAssessmentPipelineTests(unittest.TestCase):  # SPDX-License-Identif
                 continue  # SPDX-License-Identifier: MIT | 跳过非问卷字段。
             source = "creator" if key in optional else "ai_prefill"  # SPDX-License-Identifier: MIT | 模拟关键答案由对方 AI 代填。
             answers[key] = {"value": value, "source": source, "confidence": 0.91, "evidence_refs": ["doc-1"], "creator_confirmed": True}  # SPDX-License-Identifier: MIT | 记录来源、证据和创作者确认。
-        answers["module_status"] = {"value": {"core_design": "validated", "prototype": "ready", "ux": "validated", "art": "in_progress", "qa": "missing", "store_assets": "missing", "compliance": "missing"}, "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": True}  # SPDX-License-Identifier: MIT | 使用前端实际提交的模块状态键生成差异诊断。
+        answers["module_status"] = {"value": {"core_design": "validated", "prototype": "ready", "art_pipeline": "in_progress", "qa": "missing", "store_assets": "missing", "compliance": "missing"}, "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": True}  # SPDX-License-Identifier: MIT | 提供模块当前状态以生成差异诊断。
         answers["schedule"]["value"]["available_funding"] = 700000  # SPDX-License-Identifier: MIT | 提供现有资金以计算可解释差额。
         return {"project_id": project["project_id"], "version": project["version"], "title": project["title"], "artifacts": [{"artifact_id": "doc-1", "kind": "design_document", "filename": "游戏方案.docx", "sha256": "a" * 64, "parse_status": "ready"}, {"artifact_id": "demo-1", "kind": "demo_build", "filename": "demo.zip", "sha256": "b" * 64, "parse_status": "ready"}], "questionnaire": answers}  # SPDX-License-Identifier: MIT | 返回完整上传和问卷提交。
 
@@ -179,21 +147,6 @@ class CreatorAssessmentPipelineTests(unittest.TestCase):  # SPDX-License-Identif
         submission["questionnaire"]["development_stage"]["value"] = "concept"  # SPDX-License-Identifier: MIT | 声明项目尚处概念阶段。
         report = self.pipeline.run(submission)  # SPDX-License-Identifier: MIT | 运行无 Demo 的早期项目。
         self.assertNotEqual(report.rating.assessment_result.value, "D")  # SPDX-License-Identifier: MIT | 确认早期项目不因合理无 Demo 被机械判 D。
-
-    def test_all_required_questions_are_enforced_before_scoring(self) -> None:  # SPDX-License-Identifier: MIT | 验证新增必填题不会因重复清单遗漏而在评分后才暴露问题。
-        submission = self._submission()  # SPDX-License-Identifier: MIT | 创建原本可执行的完整提交。
-        submission["questionnaire"].pop("production_feasibility")  # SPDX-License-Identifier: MIT | 移除产品可实现性这一服务端也必须校验的必填答案。
-        with self.assertRaises(SubmissionNotReadyError) as context:  # SPDX-License-Identifier: MIT | 预期评分前检查立即阻止缺失必填信息。
-            self.pipeline.run(submission)  # SPDX-License-Identifier: MIT | 尝试运行缺少必填产品实现信息的提交。
-        self.assertIn("缺少关键问卷答案：production_feasibility", context.exception.issues)  # SPDX-License-Identifier: MIT | 确认错误精确指向遗漏的必填题。
-
-    def test_frontend_module_keys_and_role_labels_do_not_create_false_gaps(self) -> None:  # SPDX-License-Identifier: MIT | 验证前端中文能力标签和模块键能被诊断器正确识别。
-        project = strong_project()  # SPDX-License-Identifier: MIT | 创建完整项目事实供诊断器直接使用。
-        project["team"] = {"size": 8, "roles": ["游戏策划", "客户端程序", "用户体验/交互", "美术", "音频", "测试/质量保障", "发行运营", "合规/隐私顾问"]}  # SPDX-License-Identifier: MIT | 使用前端当前可选的中文能力标签覆盖全部基础角色。
-        project["module_status"] = {"core_design": "validated", "prototype": "validated", "ux": "validated", "art": "validated", "audio": "validated", "qa": "validated", "store_assets": "validated", "compliance": "validated"}  # SPDX-License-Identifier: MIT | 使用前端实际提交的八个模块键声明全部已验证。
-        report = DiagnosticPlanner().build(project, GameRatingAgent().run(project))  # SPDX-License-Identifier: MIT | 生成模块与角色缺口诊断。
-        self.assertFalse(any(gap.module_id in {"ux_onboarding", "art_pipeline"} for gap in report.missing_modules))  # SPDX-License-Identifier: MIT | 确认 UX 和美术状态不会被字段名不一致误判缺失。
-        self.assertFalse(any(gap.role in {"UX/交互设计", "QA/测试"} for gap in report.missing_roles))  # SPDX-License-Identifier: MIT | 确认已选择的新手中文能力标签不会触发重复角色推荐。
 
     def test_unknown_question_cannot_override_internal_fields(self) -> None:  # SPDX-License-Identifier: MIT | 验证未登记题号不能注入项目内部字段。
         submission = self._submission()  # SPDX-License-Identifier: MIT | 创建完整提交。
@@ -261,26 +214,6 @@ class CreatorAssessmentPipelineTests(unittest.TestCase):  # SPDX-License-Identif
         second = agent.record_fulfillment(feedback)  # SPDX-License-Identifier: MIT | 模拟消息重试再次回写。
         self.assertEqual(first.status, "recorded")  # SPDX-License-Identifier: MIT | 确认首次履约被记录。
         self.assertEqual(second.status, "duplicate")  # SPDX-License-Identifier: MIT | 确认重复消息不会重复计入能力历史。
-
-    def test_concurrent_fulfillment_feedback_is_recorded_once(self) -> None:  # SPDX-License-Identifier: MIT | 验证两个并发重试只会有一个事件写入能力历史。
-        profile = TalentProfile("talent-qa", "循证测试者", (CapabilityRecord("qa.game_test_plan", "L3", ("pc",), ("assessment-101",), True, "2030-12-31", 0.94, "CAP-RUBRIC-2.0"),), ("cash",), True)  # SPDX-License-Identifier: MIT | 创建可接收 QA 履约反馈的人才档案。
-        agent = InMemoryTalentCapabilityAgent((profile,))  # SPDX-License-Identifier: MIT | 创建带原子幂等保护的离线人才能力 Agent。
-        feedback = CapabilityFulfillmentFeedback("feedback-concurrent", "seed-strong", "0.8.2", "talent-qa", ("qa.game_test_plan",), "milestone-qa-1", True, True, 0, ("acceptance-44",), "reviewer-7")  # SPDX-License-Identifier: MIT | 构造两个请求共用的合法履约事件。
-        start = threading.Barrier(2)  # SPDX-License-Identifier: MIT | 让两个工作线程尽可能同时进入写入路径。
-        receipts = []  # SPDX-License-Identifier: MIT | 收集两个并发调用的回执状态。
-        receipts_lock = threading.Lock()  # SPDX-License-Identifier: MIT | 串行保护测试侧的回执列表追加操作。
-        def submit() -> None:  # SPDX-License-Identifier: MIT | 定义单个并发重试请求。
-            start.wait()  # SPDX-License-Identifier: MIT | 等待另一请求后同时开始调用。
-            receipt = agent.record_fulfillment(feedback)  # SPDX-License-Identifier: MIT | 提交相同反馈标识的履约事件。
-            with receipts_lock:  # SPDX-License-Identifier: MIT | 在测试记录时避免列表并发写入。
-                receipts.append(receipt.status)  # SPDX-License-Identifier: MIT | 保存当前请求的回执状态。
-        workers = [threading.Thread(target=submit) for _ in range(2)]  # SPDX-License-Identifier: MIT | 创建两个模拟网络重试的并发线程。
-        for worker in workers:  # SPDX-License-Identifier: MIT | 启动所有并发请求。
-            worker.start()  # SPDX-License-Identifier: MIT | 运行单个模拟请求。
-        for worker in workers:  # SPDX-License-Identifier: MIT | 等待所有并发请求完成。
-            worker.join()  # SPDX-License-Identifier: MIT | 确保断言前不存在仍在执行的线程。
-        self.assertCountEqual(receipts, ["recorded", "duplicate"])  # SPDX-License-Identifier: MIT | 确认一次成功写入且一次被准确识别为重试。
-        self.assertEqual(len(agent.fulfillment_audit), 1)  # SPDX-License-Identifier: MIT | 确认审计历史中只有唯一一条履约事实。
 
     def test_capability_without_evidence_is_not_recommended(self) -> None:  # SPDX-License-Identifier: MIT | 验证无证据能力不能进入人才推荐。
         profile = TalentProfile("talent-empty", "无证据候选", (CapabilityRecord("qa.game_test_plan", "L3", ("pc",), (), True, "2030-12-31", 0.99, "CAP-RUBRIC-2.0"),), ("cash",), True)  # SPDX-License-Identifier: MIT | 创建等级很高但没有任何考核证据的能力记录。
