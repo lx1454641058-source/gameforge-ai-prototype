@@ -1,0 +1,35 @@
+{
+  "project_id": "seed-strong",
+  "version": "0.8.2",
+  "title": "星环余烬",
+  "artifacts": [
+    {"artifact_id": "doc-1", "kind": "design_document", "filename": "游戏方案.docx", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "parse_status": "ready"},
+    {"artifact_id": "demo-1", "kind": "demo_build", "filename": "demo.zip", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "parse_status": "ready"}
+  ],
+  "questionnaire": {
+    "pitch": {"value": "20 分钟元素构筑动作 Roguelite。", "source": "ai_prefill", "confidence": 0.94, "evidence_refs": ["doc-1"], "creator_confirmed": true},
+    "genre_ids": {"value": ["action_roguelite"], "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": true},
+    "gameplay_features": {"value": ["real_time_combat", "run_based", "randomized_builds", "elemental_fusion", "boss_encounter"], "source": "creator", "confidence": 1.0, "evidence_refs": ["doc-1", "demo-1"], "creator_confirmed": true},
+    "core_loop": {"value": ["战斗", "掉落", "元素融合", "Boss 验证", "局外解锁"], "source": "ai_prefill", "confidence": 0.92, "evidence_refs": ["doc-1", "demo-1"], "creator_confirmed": true},
+    "first_session_hook": {"value": "玩家在首局通过近战闪避和两种元素即时融合，迅速看到不同构筑产生的战斗变化与风险回报。", "source": "ai_prefill", "confidence": 0.88, "evidence_refs": ["doc-1", "demo-1"], "creator_confirmed": true},
+    "long_term_motivation": {"value": "每局解锁新的元素词条、敌人组合与 Boss 机制，玩家通过操作学习和构筑试验形成长期目标与差异。", "source": "ai_prefill", "confidence": 0.86, "evidence_refs": ["doc-1"], "creator_confirmed": true},
+    "progression_feedback": {"value": "局内升级立即改变招式反馈，局外只解锁选择空间而不直接碾压难度，失败后显示可复盘的伤害来源。", "source": "creator", "confidence": 1.0, "evidence_refs": ["doc-1"], "creator_confirmed": true},
+    "content_structure": {"value": "三幕地图、六个生态房间组、动态事件和 Boss 变体按难度层逐步开放，并支持二十分钟完成一次验证。", "source": "creator", "confidence": 1.0, "evidence_refs": ["doc-1"], "creator_confirmed": true},
+    "social_competition": {"value": {"not_applicable_reason": "核心为单人体验，首版不以社交留存为目标。"}, "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": true},
+    "business_model": {"value": "buyout", "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": true},
+    "value_exchange": {"value": "玩家一次购买即可获得完整主线、全部战斗系统与后续平衡更新，不销售影响战斗结果的数值道具。", "source": "creator", "confidence": 1.0, "evidence_refs": ["doc-1"], "creator_confirmed": true},
+    "reference_games": {"value": ["Hades", "Dead Cells"], "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": true},
+    "innovation_axes": {"value": ["core_loop", "build_interaction"], "source": "creator", "confidence": 1.0, "evidence_refs": ["doc-1"], "creator_confirmed": true},
+    "innovation_features": {"value": ["elemental_fusion", "dynamic_enemy_response"], "source": "creator", "confidence": 1.0, "evidence_refs": ["doc-1", "demo-1"], "creator_confirmed": true},
+    "validation_methods": {"value": ["playtest", "telemetry"], "source": "creator", "confidence": 1.0, "evidence_refs": ["doc-1", "demo-1"], "creator_confirmed": true},
+    "innovation_claim": {"value": "元素融合会同时改变攻击、移动和敌人反应，具体结论由试玩与数据验证，不按说明字数评分。", "source": "creator", "confidence": 1.0, "evidence_refs": ["doc-1"], "creator_confirmed": true},
+    "team": {"value": {"size": 6, "roles": ["设计", "程序", "美术", "音频"]}, "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": true},
+    "schedule": {"value": {"months": 10, "budget": 1200000, "available_funding": 700000}, "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": true},
+    "scope": {"value": "PC 单平台，首发一名角色、三幕内容和三个 Boss。", "source": "creator", "confidence": 1.0, "evidence_refs": ["doc-1"], "creator_confirmed": true},
+    "development_stage": {"value": "vertical_slice", "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": true},
+    "platforms": {"value": ["steam"], "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": true},
+    "module_status": {"value": {"core_design": "validated", "prototype": "ready", "art_pipeline": "in_progress", "qa": "missing", "store_assets": "missing", "compliance": "missing"}, "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": true},
+    "multiplayer": {"value": false, "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": true},
+    "online_service": {"value": false, "source": "creator", "confidence": 1.0, "evidence_refs": [], "creator_confirmed": true}
+  }
+}

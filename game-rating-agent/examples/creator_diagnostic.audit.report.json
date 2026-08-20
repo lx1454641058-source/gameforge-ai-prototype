@@ -1,0 +1,508 @@
+{
+  "rating": {
+    "run_id": "gfr_783a95c4bfc24446",
+    "project_id": "seed-strong",
+    "project_version": "0.8.2",
+    "assessment_result": "B_GATE",
+    "game_dna": {
+      "core_loop": 4,
+      "first_attraction": 2,
+      "sustained_motivation": 3,
+      "progression_feedback": 3,
+      "content_structure": 3,
+      "social_competition": 2,
+      "value_exchange": 3,
+      "feasibility": 4,
+      "innovation_candidate": 2
+    },
+    "hard_gates": {
+      "critical_fields_complete": true,
+      "core_loop_defined": true,
+      "stage_evidence_consistent": true,
+      "basic_feasibility": true
+    },
+    "blocking_issues": [],
+    "strengths": [
+      "core_loop 有明确输入依据",
+      "sustained_motivation 有明确输入依据",
+      "progression_feedback 有明确输入依据",
+      "content_structure 有明确输入依据",
+      "value_exchange 有明确输入依据",
+      "feasibility 有明确输入依据"
+    ],
+    "risks": [],
+    "improvement_actions": [],
+    "confidence": 0.93,
+    "needs_human_review": false,
+    "rubric_version": "GF-GAME-RUBRIC-0.1-PROVISIONAL",
+    "extractor_version": "deterministic-extractor-0.1",
+    "input_hash": "87740c9e2759666758b3fabea49c627562b3ec494c45f15b20a97b9ff84ff954",
+    "steps": [
+      {
+        "name": "freeze_input",
+        "status": "completed",
+        "detail": "已冻结 sha256:87740c9e2759",
+        "completed_at": "2026-08-13T12:59:37.033853+00:00"
+      },
+      {
+        "name": "ingestion",
+        "status": "completed",
+        "detail": "关键字段门槛=True；注入信号=0",
+        "completed_at": "2026-08-13T12:59:37.034186+00:00"
+      },
+      {
+        "name": "structure",
+        "status": "completed",
+        "detail": "core_loop=4；content_structure=3",
+        "completed_at": "2026-08-13T12:59:37.034193+00:00"
+      },
+      {
+        "name": "motivation",
+        "status": "completed",
+        "detail": "first_attraction=2；sustained_motivation=3；progression_feedback=3",
+        "completed_at": "2026-08-13T12:59:37.034197+00:00"
+      },
+      {
+        "name": "value",
+        "status": "completed",
+        "detail": "value_exchange=3；social_competition=2",
+        "completed_at": "2026-08-13T12:59:37.034199+00:00"
+      },
+      {
+        "name": "feasibility",
+        "status": "completed",
+        "detail": "feasibility=4",
+        "completed_at": "2026-08-13T12:59:37.034202+00:00"
+      },
+      {
+        "name": "innovation",
+        "status": "completed",
+        "detail": "innovation_candidate=2",
+        "completed_at": "2026-08-13T12:59:37.034204+00:00"
+      },
+      {
+        "name": "rule_engine",
+        "status": "completed",
+        "detail": "规则版本=GF-GAME-RUBRIC-0.1-PROVISIONAL；结论=B_GATE",
+        "completed_at": "2026-08-13T12:59:37.034212+00:00"
+      },
+      {
+        "name": "report",
+        "status": "completed",
+        "detail": "生成 0 个阻塞项和 0 个行动项",
+        "completed_at": "2026-08-13T12:59:37.034215+00:00"
+      }
+    ],
+    "limitations": [
+      "该结果只包含 D、C、B_GATE，不是公开 S、A、B 评级。",
+      "当前阈值尚未经过领域专家和种子项目校准。",
+      "离线提取器只衡量结构化资料充分度，不验证真实游戏品质。",
+      "进入真人评分仍需项目完成度达到平台规定门槛。"
+    ]
+  },
+  "missing_modules": [
+    {
+      "module_id": "ux_onboarding",
+      "name": "交互与新手引导",
+      "current_state": "unknown",
+      "reason": "当前状态为 unknown；需在进入下一阶段前形成可验证证据",
+      "priority": "P1",
+      "evidence_needed": [
+        "首局流程",
+        "可用性测试记录"
+      ]
+    },
+    {
+      "module_id": "art_pipeline",
+      "name": "美术生产管线",
+      "current_state": "in_progress",
+      "reason": "当前状态为 in_progress；需在进入下一阶段前形成可验证证据",
+      "priority": "P1",
+      "evidence_needed": [
+        "风格基准",
+        "资产清单与规范"
+      ]
+    },
+    {
+      "module_id": "audio",
+      "name": "音频与反馈",
+      "current_state": "unknown",
+      "reason": "当前状态为 unknown；需在进入下一阶段前形成可验证证据",
+      "priority": "P1",
+      "evidence_needed": [
+        "音频清单",
+        "关键反馈试听"
+      ]
+    },
+    {
+      "module_id": "qa",
+      "name": "测试与质量保障",
+      "current_state": "missing",
+      "reason": "当前状态为 missing；需在进入下一阶段前形成可验证证据",
+      "priority": "P0",
+      "evidence_needed": [
+        "测试计划",
+        "缺陷与回归记录"
+      ]
+    },
+    {
+      "module_id": "store_assets",
+      "name": "商店素材与产品说明",
+      "current_state": "missing",
+      "reason": "当前状态为 missing；需在进入下一阶段前形成可验证证据",
+      "priority": "P1",
+      "evidence_needed": [
+        "真实玩法截图",
+        "预告片",
+        "功能一致的商店文案"
+      ]
+    },
+    {
+      "module_id": "compliance",
+      "name": "隐私、内容与平台合规",
+      "current_state": "missing",
+      "reason": "当前状态为 missing；需在进入下一阶段前形成可验证证据",
+      "priority": "P0",
+      "evidence_needed": [
+        "隐私说明",
+        "内容声明",
+        "第三方 SDK 清单"
+      ]
+    }
+  ],
+  "investment_needs": [
+    {
+      "category": "cash",
+      "reason": "覆盖创作者填写预算与现有资金之间的差额",
+      "amount_gap": 500000.0,
+      "unit": "CNY",
+      "confidence": "calculated"
+    },
+    {
+      "category": "people",
+      "reason": "需要补齐 4 类角色能力",
+      "amount_gap": null,
+      "unit": "角色/人月需团队估算",
+      "confidence": "derived_from_module_gaps"
+    },
+    {
+      "category": "production",
+      "reason": "仍有 6 个模块未达到 validated",
+      "amount_gap": null,
+      "unit": "工作量需拆解后估算",
+      "confidence": "derived_from_questionnaire"
+    },
+    {
+      "category": "external_services",
+      "reason": "测试设备、合规咨询、商店素材或发行支持",
+      "amount_gap": null,
+      "unit": "按报价确认",
+      "confidence": "requires_vendor_quotes"
+    }
+  ],
+  "missing_roles": [
+    {
+      "role": "UX/交互设计",
+      "reason": "负责补齐模块：交互与新手引导",
+      "timing": "垂直切片前",
+      "engagement": "兼职或外包",
+      "priority": "P1"
+    },
+    {
+      "role": "QA/测试",
+      "reason": "负责补齐模块：测试与质量保障",
+      "timing": "垂直切片开始",
+      "engagement": "兼职后转持续投入",
+      "priority": "P0"
+    },
+    {
+      "role": "发行运营",
+      "reason": "负责补齐模块：商店素材与产品说明",
+      "timing": "上线准备期",
+      "engagement": "外包或合作方",
+      "priority": "P1"
+    },
+    {
+      "role": "合规/隐私顾问",
+      "reason": "负责补齐模块：隐私、内容与平台合规",
+      "timing": "上线准备期",
+      "engagement": "专项外部顾问",
+      "priority": "P0"
+    }
+  ],
+  "capability_requirements": [
+    {
+      "skill_id": "ux.first_session_flow",
+      "name": "首局交互流程设计",
+      "category": "UX",
+      "scope": "把首次吸引、教学和核心操作组织为可测试首局流程",
+      "minimum_level": "L2",
+      "required_evidence": [
+        "用户流程图",
+        "交互原型",
+        "变更记录"
+      ],
+      "integration_context": "负责补齐模块：交互与新手引导",
+      "stage_needed": "垂直切片前",
+      "engagement": "兼职或外包",
+      "priority": "P1",
+      "source_role": "UX/交互设计"
+    },
+    {
+      "skill_id": "ux.usability_test",
+      "name": "游戏可用性测试",
+      "category": "UX",
+      "scope": "设计任务、观察玩家行为并将问题转为可执行改进",
+      "minimum_level": "L2",
+      "required_evidence": [
+        "测试脚本",
+        "观察记录",
+        "问题优先级"
+      ],
+      "integration_context": "负责补齐模块：交互与新手引导",
+      "stage_needed": "垂直切片前",
+      "engagement": "兼职或外包",
+      "priority": "P1",
+      "source_role": "UX/交互设计"
+    },
+    {
+      "skill_id": "qa.game_test_plan",
+      "name": "游戏测试计划设计",
+      "category": "测试",
+      "scope": "覆盖核心循环、边界、存档、设备和回归风险",
+      "minimum_level": "L2",
+      "required_evidence": [
+        "测试计划",
+        "覆盖矩阵",
+        "退出条件"
+      ],
+      "integration_context": "负责补齐模块：测试与质量保障",
+      "stage_needed": "垂直切片开始",
+      "engagement": "兼职后转持续投入",
+      "priority": "P0",
+      "source_role": "QA/测试"
+    },
+    {
+      "skill_id": "qa.repro_regression",
+      "name": "缺陷复现与回归",
+      "category": "测试",
+      "scope": "稳定复现缺陷、记录环境和验证修复不引入回归",
+      "minimum_level": "L2",
+      "required_evidence": [
+        "缺陷单",
+        "复现录像",
+        "回归记录"
+      ],
+      "integration_context": "负责补齐模块：测试与质量保障",
+      "stage_needed": "垂直切片开始",
+      "engagement": "兼职后转持续投入",
+      "priority": "P0",
+      "source_role": "QA/测试"
+    },
+    {
+      "skill_id": "qa.platform_compatibility",
+      "name": "平台兼容性验证",
+      "category": "测试",
+      "scope": "按目标平台、设备和系统矩阵验证启动与关键功能",
+      "minimum_level": "L2",
+      "required_evidence": [
+        "兼容矩阵",
+        "设备日志",
+        "阻塞报告"
+      ],
+      "integration_context": "负责补齐模块：测试与质量保障",
+      "stage_needed": "垂直切片开始",
+      "engagement": "兼职后转持续投入",
+      "priority": "P0",
+      "source_role": "QA/测试"
+    },
+    {
+      "skill_id": "release.store_page",
+      "name": "游戏商店页制作",
+      "category": "发行",
+      "scope": "让文案、截图、视频、功能和当前构建保持一致",
+      "minimum_level": "L2",
+      "required_evidence": [
+        "商店页草稿",
+        "素材清单",
+        "一致性检查"
+      ],
+      "integration_context": "负责补齐模块：商店素材与产品说明",
+      "stage_needed": "上线准备期",
+      "engagement": "外包或合作方",
+      "priority": "P1",
+      "source_role": "发行运营"
+    },
+    {
+      "skill_id": "release.submission_coordination",
+      "name": "平台提审与发布协调",
+      "category": "发行",
+      "scope": "管理平台清单、提审反馈、发布日程和回滚准备",
+      "minimum_level": "L3",
+      "required_evidence": [
+        "提审清单",
+        "反馈关闭记录",
+        "发布计划"
+      ],
+      "integration_context": "负责补齐模块：商店素材与产品说明",
+      "stage_needed": "上线准备期",
+      "engagement": "外包或合作方",
+      "priority": "P1",
+      "source_role": "发行运营"
+    },
+    {
+      "skill_id": "compliance.data_mapping",
+      "name": "游戏数据与隐私梳理",
+      "category": "合规",
+      "scope": "识别数据、权限、SDK、用户和地区要求并形成披露输入",
+      "minimum_level": "L3",
+      "required_evidence": [
+        "数据流图",
+        "SDK 清单",
+        "隐私说明输入"
+      ],
+      "integration_context": "负责补齐模块：隐私、内容与平台合规",
+      "stage_needed": "上线准备期",
+      "engagement": "专项外部顾问",
+      "priority": "P0",
+      "source_role": "合规/隐私顾问"
+    },
+    {
+      "skill_id": "compliance.platform_declaration",
+      "name": "平台内容与政策声明",
+      "category": "合规",
+      "scope": "根据实际构建准备内容、年龄、广告和访问声明",
+      "minimum_level": "L3",
+      "required_evidence": [
+        "声明清单",
+        "构建对照",
+        "复核记录"
+      ],
+      "integration_context": "负责补齐模块：隐私、内容与平台合规",
+      "stage_needed": "上线准备期",
+      "engagement": "专项外部顾问",
+      "priority": "P0",
+      "source_role": "合规/隐私顾问"
+    }
+  ],
+  "talent_match": null,
+  "production_roadmap": [
+    {
+      "order": 1,
+      "name": "资料与目标冻结",
+      "objective": "确认问卷、目标玩家、平台、范围和预算",
+      "exit_criteria": [
+        "所有 AI 代填关键答案由创作者确认",
+        "方案文件与资料清单哈希冻结"
+      ]
+    },
+    {
+      "order": 2,
+      "name": "核心原型",
+      "objective": "用最低成本证明核心循环和首次吸引",
+      "exit_criteria": [
+        "可从启动进入一局完整循环",
+        "关键假设有试玩证据"
+      ]
+    },
+    {
+      "order": 3,
+      "name": "垂直切片",
+      "objective": "用接近目标质量的一小段验证内容生产与团队协作",
+      "exit_criteria": [
+        "核心美术、音频、UX 达到目标基准",
+        "工期与成本可被重新估算"
+      ]
+    },
+    {
+      "order": 4,
+      "name": "正式生产",
+      "objective": "按里程碑扩展内容并持续控制范围",
+      "exit_criteria": [
+        "P0 模块已关闭：测试与质量保障、隐私、内容与平台合规",
+        "每个里程碑有可运行构建和回归记录"
+      ]
+    },
+    {
+      "order": 5,
+      "name": "Alpha/Beta 与真人验证",
+      "objective": "完成全部功能后验证稳定性、留存和体验",
+      "exit_criteria": [
+        "功能锁定",
+        "关键缺陷关闭",
+        "完成度与 B_GATE 满足平台真人评分入口"
+      ]
+    },
+    {
+      "order": 6,
+      "name": "候选版本与上线",
+      "objective": "锁定候选构建并完成目标商店审核",
+      "exit_criteria": [
+        "构建、商店描述和声明一致",
+        "平台检查、人工终审和回滚方案完成"
+      ]
+    },
+    {
+      "order": 7,
+      "name": "上线后运营",
+      "objective": "监控质量、反馈和商业指标并控制更新风险",
+      "exit_criteria": [
+        "崩溃与关键指标可观测",
+        "热修复、客服和版本回退流程可执行"
+      ]
+    }
+  ],
+  "release_roadmap": {
+    "steam": [
+      {
+        "order": 1,
+        "name": "Steamworks 准备",
+        "objective": "配置产品、商店信息和内容问卷",
+        "exit_criteria": [
+          "内容问卷完成",
+          "商店功能只描述首发真实内容"
+        ]
+      },
+      {
+        "order": 2,
+        "name": "商店素材与页面",
+        "objective": "提交真实玩法截图、可读标题素材和连贯说明",
+        "exit_criteria": [
+          "截图为真实玩法",
+          "文案、功能与构建一致"
+        ]
+      },
+      {
+        "order": 3,
+        "name": "近最终构建",
+        "objective": "验证所有声明支持的系统和功能",
+        "exit_criteria": [
+          "支持系统均可启动",
+          "商店所列功能已实现",
+          "交易规则符合 Steam 要求"
+        ]
+      },
+      {
+        "order": 4,
+        "name": "提交审核",
+        "objective": "将商店页与构建标记为准备审核",
+        "exit_criteria": [
+          "按计划至少预留七个工作日",
+          "处理 Valve 反馈并重新提交"
+        ]
+      },
+      {
+        "order": 5,
+        "name": "发行与更新",
+        "objective": "审核通过后安排发行并持续更新",
+        "exit_criteria": [
+          "页面和构建为 Ready for release",
+          "上线监控和更新流程已建立"
+        ]
+      }
+    ]
+  },
+  "assumptions": [
+    "工期、人月和外包价格必须由团队拆解任务或取得报价后确认"
+  ]
+}

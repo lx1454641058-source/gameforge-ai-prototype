@@ -1,0 +1,173 @@
+{
+  "run_id": "gfr_b4e02acbfb894bee",
+  "project_id": "seed-strong",
+  "project_version": "0.8.2",
+  "assessment_result": "B_GATE",
+  "game_dna": {
+    "core_loop": 4,
+    "first_attraction": 2,
+    "sustained_motivation": 3,
+    "progression_feedback": 3,
+    "content_structure": 3,
+    "social_competition": 2,
+    "value_exchange": 3,
+    "feasibility": 4,
+    "innovation_candidate": 4
+  },
+  "hard_gates": {
+    "critical_fields_complete": true,
+    "core_loop_defined": true,
+    "stage_evidence_consistent": true,
+    "basic_feasibility": true
+  },
+  "blocking_issues": [],
+  "strengths": [
+    "core_loop 有明确输入依据",
+    "sustained_motivation 有明确输入依据",
+    "progression_feedback 有明确输入依据",
+    "content_structure 有明确输入依据",
+    "value_exchange 有明确输入依据",
+    "feasibility 有明确输入依据",
+    "innovation_candidate 有明确输入依据"
+  ],
+  "risks": [],
+  "improvement_actions": [],
+  "confidence": 0.89,
+  "needs_human_review": false,
+  "rubric_version": "GF-GAME-RUBRIC-0.2-PROVISIONAL",
+  "extractor_version": "deterministic-extractor-1.0",
+  "input_hash": "dd3061989f6708bd3bb8163f1bd264fcb77ab575193df77fc0fd9d846d6ee067",
+  "steps": [
+    {
+      "name": "freeze_input",
+      "status": "completed",
+      "detail": "已冻结 sha256:dd3061989f67",
+      "completed_at": "2026-08-14T03:33:06.554763+00:00"
+    },
+    {
+      "name": "ingestion",
+      "status": "completed",
+      "detail": "关键字段门槛=True；注入信号=0",
+      "completed_at": "2026-08-14T03:33:06.555125+00:00"
+    },
+    {
+      "name": "structure",
+      "status": "completed",
+      "detail": "core_loop=4；content_structure=3",
+      "completed_at": "2026-08-14T03:33:06.555132+00:00"
+    },
+    {
+      "name": "motivation",
+      "status": "completed",
+      "detail": "first_attraction=2；sustained_motivation=3；progression_feedback=3",
+      "completed_at": "2026-08-14T03:33:06.555136+00:00"
+    },
+    {
+      "name": "value",
+      "status": "completed",
+      "detail": "value_exchange=3；social_competition=2",
+      "completed_at": "2026-08-14T03:33:06.555138+00:00"
+    },
+    {
+      "name": "feasibility",
+      "status": "completed",
+      "detail": "feasibility=4",
+      "completed_at": "2026-08-14T03:33:06.555140+00:00"
+    },
+    {
+      "name": "innovation",
+      "status": "completed",
+      "detail": "innovation_candidate=4",
+      "completed_at": "2026-08-14T03:33:06.555142+00:00"
+    },
+    {
+      "name": "rule_engine",
+      "status": "completed",
+      "detail": "规则版本=GF-GAME-RUBRIC-0.2-PROVISIONAL；结论=B_GATE",
+      "completed_at": "2026-08-14T03:33:06.555153+00:00"
+    },
+    {
+      "name": "report",
+      "status": "completed",
+      "detail": "生成 0 个阻塞项和 0 个行动项",
+      "completed_at": "2026-08-14T03:33:06.555157+00:00"
+    }
+  ],
+  "limitations": [
+    "该结果只包含 D、C、B_GATE，不是公开 S、A、B 评级。",
+    "当前阈值尚未经过领域专家和种子项目校准。",
+    "类型知识库覆盖常见商业类型和机制组合，但不会替代接入实时商店、国内渠道或竞品数据库后的市场全量比对。",
+    "进入真人评分仍需项目完成度达到平台规定门槛。"
+  ],
+  "knowledge_comparison": {
+    "knowledge_base_version": "GF-GENRE-KB-1.0",
+    "matched_genres": [
+      "action_roguelite"
+    ],
+    "matched_baseline_features": [
+      "boss_encounter",
+      "randomized_builds",
+      "real_time_combat",
+      "run_based"
+    ],
+    "crowded_patterns": [],
+    "declared_innovation_features": [
+      "dynamic_enemy_response",
+      "elemental_fusion"
+    ],
+    "baseline_reuse_features": [],
+    "reference_games": [
+      "dead cells",
+      "hades"
+    ],
+    "innovation_axes": [
+      "build_interaction",
+      "core_loop"
+    ],
+    "validation_methods": [
+      "playtest",
+      "telemetry"
+    ],
+    "dimension_weights": [
+      [
+        "core_loop",
+        0.178571
+      ],
+      [
+        "first_attraction",
+        0.089286
+      ],
+      [
+        "sustained_motivation",
+        0.142857
+      ],
+      [
+        "progression_feedback",
+        0.089286
+      ],
+      [
+        "content_structure",
+        0.089286
+      ],
+      [
+        "social_competition",
+        0.053571
+      ],
+      [
+        "value_exchange",
+        0.089286
+      ],
+      [
+        "feasibility",
+        0.107143
+      ],
+      [
+        "innovation_candidate",
+        0.160714
+      ]
+    ],
+    "homogeneity_risk": "低",
+    "differentiation_score": 4,
+    "rationale": "类型=action_roguelite；基线重合=4；拥挤组合=0；非基线候选=2；结构化证据=4/4"
+  }
+}
