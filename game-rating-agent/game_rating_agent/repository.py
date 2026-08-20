@@ -124,7 +124,6 @@ class AgentRepository:  # SPDX-License-Identifier: MIT | 管理可恢复运行�
 
     def _initialize(self) -> None:  # SPDX-License-Identifier: MIT | 创建单机 MVP 数据表和索引。
         with self._connect() as connection:  # SPDX-License-Identifier: MIT | 在首次连接中应用幂等 DDL。
-            connection.execute("PRAGMA journal_mode = WAL")  # SPDX-License-Identifier: MIT | 仅在初始化时启用 WAL，避免并发请求重复切换日志模式造成锁竞争。
             connection.execute("CREATE TABLE IF NOT EXISTS submissions(id TEXT PRIMARY KEY, project_id TEXT NOT NULL, project_version TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL)")  # SPDX-License-Identifier: MIT | 创建提交版本表。
             connection.execute("CREATE TABLE IF NOT EXISTS artifacts(id TEXT PRIMARY KEY, project_id TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL)")  # SPDX-License-Identifier: MIT | 创建隔离资料元数据表。
             connection.execute("CREATE TABLE IF NOT EXISTS runs(id TEXT PRIMARY KEY, submission_id TEXT NOT NULL REFERENCES submissions(id), status TEXT NOT NULL, attempt INTEGER NOT NULL, report_json TEXT, error_json TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)")  # SPDX-License-Identifier: MIT | 创建可恢复 Agent 运行表。
@@ -137,6 +136,7 @@ class AgentRepository:  # SPDX-License-Identifier: MIT | 管理可恢复运行�
         connection = sqlite3.connect(self.database_path, timeout=10)  # SPDX-License-Identifier: MIT | 创建具有锁等待上限的连接。
         connection.row_factory = sqlite3.Row  # SPDX-License-Identifier: MIT | 允许按列名读取查询结果。
         connection.execute("PRAGMA foreign_keys = ON")  # SPDX-License-Identifier: MIT | 强制运行引用有效提交。
+        connection.execute("PRAGMA journal_mode = WAL")  # SPDX-License-Identifier: MIT | 改善本机 API 并发读写。
         try:  # SPDX-License-Identifier: MIT | 保证成功提交、异常回滚并最终释放文件句柄。
             with connection:  # SPDX-License-Identifier: MIT | 使用 SQLite 原生事务上下文管理提交和回滚。
                 yield connection  # SPDX-License-Identifier: MIT | 向单次仓库操作提供已配置连接。

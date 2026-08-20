@@ -18,7 +18,7 @@ DIMENSIONS = (  # SPDX-License-Identifier: MIT | 定义九维游戏认知模型�
     "content_structure",  # SPDX-License-Identifier: MIT | 内容结构维度。
     "social_competition",  # SPDX-License-Identifier: MIT | 社交竞争维度。
     "value_exchange",  # SPDX-License-Identifier: MIT | 价值交换维度。
-    "feasibility",  # SPDX-License-Identifier: MIT | 产品可实现性维度，假设可获得充足团队与资金后判断游戏本身能否做出来。
+    "feasibility",  # SPDX-License-Identifier: MIT | 可落地性维度。
     "innovation_candidate",  # SPDX-License-Identifier: MIT | 创新候选维度。
 )  # SPDX-License-Identifier: MIT | 九维定义结束。
 
@@ -28,7 +28,7 @@ WORKFLOW = (  # SPDX-License-Identifier: MIT | 定义可审计的 Agent 步骤�
     "structure",  # SPDX-License-Identifier: MIT | 提取核心循环与系统关系。
     "motivation",  # SPDX-License-Identifier: MIT | 提取首次吸引和持续动机。
     "value",  # SPDX-License-Identifier: MIT | 分析商业模式和价值交换。
-    "feasibility",  # SPDX-License-Identifier: MIT | 判断范围、技术路径、平台约束和关键风险下的产品可实现性。
+    "feasibility",  # SPDX-License-Identifier: MIT | 判断团队周期范围可落地性。
     "innovation",  # SPDX-License-Identifier: MIT | 记录差异点和新类型候选。
     "rule_engine",  # SPDX-License-Identifier: MIT | 由确定性规则写业务结论。
     "report",  # SPDX-License-Identifier: MIT | 生成证据化报告。
@@ -63,18 +63,16 @@ class DimensionEvidence:  # SPDX-License-Identifier: MIT | 描述维度分数和
 class ExtractionResult:  # SPDX-License-Identifier: MIT | 作为模型层和规则层之间的结构合同。
     dimensions: dict[str, DimensionEvidence]  # SPDX-License-Identifier: MIT | 保存九维结构化证据。
     hard_gates: dict[str, bool]  # SPDX-License-Identifier: MIT | 保存四个硬门槛事实。
-    human_review_ready: bool  # SPDX-License-Identifier: MIT | 标记是否达到真人评分申请所需的完成度和可运行版本门槛。
     strengths: tuple[str, ...]  # SPDX-License-Identifier: MIT | 保存有字段依据的优势。
     risks: tuple[str, ...]  # SPDX-License-Identifier: MIT | 保存有字段依据的风险。
     uncertainties: tuple[str, ...]  # SPDX-License-Identifier: MIT | 明确记录未知信息。
     confidence: float  # SPDX-License-Identifier: MIT | 表示提取可靠度而非成功概率。
     injection_signals: tuple[str, ...]  # SPDX-License-Identifier: MIT | 保存不可信内容中的风险信号。
     knowledge_comparison: dict[str, Any]  # SPDX-License-Identifier: MIT | 保存类型知识库的可解释对比快照。
-    resource_readiness: dict[str, Any]  # SPDX-License-Identifier: MIT | 单独保存当前团队、计划与资金准备度，不参与九维评分。
 
 @dataclass(frozen=True)  # SPDX-License-Identifier: MIT | 冻结确定性规则配置。
 class ProvisionalRubric:  # SPDX-License-Identifier: MIT | 定义等待领域专家校准的首版阈值。
-    version: str = "GF-GAME-RUBRIC-0.4-PROVISIONAL"  # SPDX-License-Identifier: MIT | 标记增加真人评分完成度门槛后的暂定规则。
+    version: str = "GF-GAME-RUBRIC-0.2-PROVISIONAL"  # SPDX-License-Identifier: MIT | 明示该规则尚未领域校准。
     min_average_for_b_gate: float = 2.6  # SPDX-License-Identifier: MIT | 设置 B 门槛平均维度暂定值。
     min_confidence_for_b_gate: float = 0.65  # SPDX-License-Identifier: MIT | 设置 B 门槛最低证据可靠度。
     required_dimension_scores: dict[str, int] = field(default_factory=lambda: {  # SPDX-License-Identifier: MIT | 定义关键维度暂定下限。
@@ -82,7 +80,7 @@ class ProvisionalRubric:  # SPDX-License-Identifier: MIT | 定义等待领域专
         "first_attraction": 2,  # SPDX-License-Identifier: MIT | 要求首次吸引至少可解释。
         "sustained_motivation": 3,  # SPDX-License-Identifier: MIT | 要求持续动机较完整。
         "value_exchange": 2,  # SPDX-License-Identifier: MIT | 要求对应商业模式的价值逻辑成立。
-        "feasibility": 2,  # SPDX-License-Identifier: MIT | 要求产品在资源充足假设下不存在未处理的实现阻断。
+        "feasibility": 2,  # SPDX-License-Identifier: MIT | 要求基本具备落地条件。
         "innovation_candidate": 3,  # SPDX-License-Identifier: MIT | 要求提供对标、规则差异和验证方案，避免同质化项目自动进入 B 门槛。
     })  # SPDX-License-Identifier: MIT | 关键维度暂定下限结束。
 
@@ -94,7 +92,6 @@ class RatingResult:  # SPDX-License-Identifier: MIT | 描述可序列化的最�
     assessment_result: AssessmentResult  # SPDX-License-Identifier: MIT | 保存 D、C 或 B_GATE。
     game_dna: dict[str, int]  # SPDX-License-Identifier: MIT | 保存九维分数快照。
     hard_gates: dict[str, bool]  # SPDX-License-Identifier: MIT | 保存硬门槛快照。
-    human_review_ready: bool  # SPDX-License-Identifier: MIT | 保存是否可以申请真人评分的独立完成度判定。
     blocking_issues: tuple[str, ...]  # SPDX-License-Identifier: MIT | 保存阻止 B 门槛的问题。
     strengths: tuple[str, ...]  # SPDX-License-Identifier: MIT | 保存证据化优势。
     risks: tuple[str, ...]  # SPDX-License-Identifier: MIT | 保存证据化风险。
@@ -107,7 +104,6 @@ class RatingResult:  # SPDX-License-Identifier: MIT | 描述可序列化的最�
     steps: tuple[StepRecord, ...]  # SPDX-License-Identifier: MIT | 保存完整步骤审计链。
     limitations: tuple[str, ...]  # SPDX-License-Identifier: MIT | 对外说明结论能力边界。
     knowledge_comparison: dict[str, Any]  # SPDX-License-Identifier: MIT | 保存类型基线、拥挤组合和创新候选比对结果。
-    resource_readiness: dict[str, Any]  # SPDX-License-Identifier: MIT | 保存不计入九维的团队与资金现状，供缺口诊断使用。
 
     def to_dict(self) -> dict[str, Any]:  # SPDX-License-Identifier: MIT | 转换为 API 友好的 JSON 对象。
         payload = asdict(self)  # SPDX-License-Identifier: MIT | 递归展开不可变数据类。
@@ -121,7 +117,7 @@ class EvidenceExtractor(Protocol):  # SPDX-License-Identifier: MIT | 定义可�
         ...  # SPDX-License-Identifier: MIT | 协议方法无需实现。
 
 class DeterministicEvidenceExtractor:  # SPDX-License-Identifier: MIT | 提供无 API Key 的离线 MVP 提取器。
-    version = "deterministic-extractor-1.1"  # SPDX-License-Identifier: MIT | 标记产品可实现性与分层成长反馈证据结构升级。
+    version = "deterministic-extractor-1.0"  # SPDX-License-Identifier: MIT | 固定接入类型知识库后的离线提取器版本。
 
     def __init__(self, knowledge_base: GenreKnowledgeBase | None = None) -> None:  # SPDX-License-Identifier: MIT | 支持注入经审核的新知识库版本。
         self.knowledge_base = knowledge_base or GenreKnowledgeBase()  # SPDX-License-Identifier: MIT | 默认使用内置类型评分知识库。
@@ -133,26 +129,24 @@ class DeterministicEvidenceExtractor:  # SPDX-License-Identifier: MIT | 提供�
             "core_loop": self._chain_score(project.get("core_loop"), "core_loop"),  # SPDX-License-Identifier: MIT | 评估行为链完整度。
             "first_attraction": self._text_score(project.get("first_session_hook"), "first_session_hook"),  # SPDX-License-Identifier: MIT | 评估首次吸引描述。
             "sustained_motivation": self._text_score(project.get("long_term_motivation"), "long_term_motivation"),  # SPDX-License-Identifier: MIT | 评估持续动机描述。
-            "progression_feedback": self._progression_score(project.get("progression_feedback")),  # SPDX-License-Identifier: MIT | 按局内、局外或混合模式评估成长反馈闭环。
+            "progression_feedback": self._text_score(project.get("progression_feedback"), "progression_feedback"),  # SPDX-License-Identifier: MIT | 评估成长反馈描述。
             "content_structure": self._text_score(project.get("content_structure"), "content_structure"),  # SPDX-License-Identifier: MIT | 评估内容结构描述。
             "social_competition": self._optional_score(project.get("social_competition"), "social_competition"),  # SPDX-License-Identifier: MIT | 不因单机或非社交设计机械扣分。
             "value_exchange": self._value_score(project),  # SPDX-License-Identifier: MIT | 按商业模式评估价值交换。
-            "feasibility": self._product_feasibility_score(project),  # SPDX-License-Identifier: MIT | 在资源充足假设下评估范围、技术路径、平台约束与风险。
+            "feasibility": self._feasibility_score(project),  # SPDX-License-Identifier: MIT | 评估团队周期预算范围。
             "innovation_candidate": self._differentiation_score(knowledge_comparison),  # SPDX-License-Identifier: MIT | 按知识库的结构化比对结果评估同质化风险。
         }  # SPDX-License-Identifier: MIT | 九维证据生成结束。
         evidence_items = project.get("evidence", []) if isinstance(project.get("evidence"), list) else []  # SPDX-License-Identifier: MIT | 安全读取上传证据清单。
         evidence_count = len(evidence_items)  # SPDX-License-Identifier: MIT | 统计所有可验证资料数量。
         demo_count = sum(1 for item in evidence_items if isinstance(item, dict) and item.get("type") == "demo")  # SPDX-License-Identifier: MIT | 单独统计可运行 Demo 证据。
-        development_stage = str(project.get("development_stage") or "")  # SPDX-License-Identifier: MIT | 读取已规范化的项目制作阶段。
-        early_stage = development_stage in {"idea", "concept", "pre_prototype"}  # SPDX-License-Identifier: MIT | 识别尚不应强制要求 Demo 的早期阶段。
-        human_review_ready = development_stage in {"vertical_slice", "alpha", "beta", "release_candidate"} and demo_count > 0  # SPDX-License-Identifier: MIT | 仅允许垂直切片及以后且含可运行版本的项目申请真人评分。
-        required_fields = ("project_id", "version", "title", "pitch", "core_loop", "business_model", "scope", "production_feasibility")  # SPDX-License-Identifier: MIT | 关键门槛只检查产品定义，不把现有团队和资金当成游戏能否实现的条件。
+        early_stage = project.get("development_stage") in {"idea", "concept", "pre_prototype"}  # SPDX-License-Identifier: MIT | 识别尚不应强制要求 Demo 的早期阶段。
+        required_fields = ("project_id", "version", "title", "pitch", "core_loop", "business_model", "team", "schedule")  # SPDX-License-Identifier: MIT | 定义 MVP 关键字段。
         critical_complete = all(self._present(project.get(key)) for key in required_fields)  # SPDX-License-Identifier: MIT | 检查关键字段是否齐全。
         hard_gates = {  # SPDX-License-Identifier: MIT | 生成四个事实硬门槛。
             "critical_fields_complete": critical_complete,  # SPDX-License-Identifier: MIT | 记录关键字段完整门槛。
             "core_loop_defined": dimensions["core_loop"].score >= 2,  # SPDX-License-Identifier: MIT | 记录核心循环门槛。
             "stage_evidence_consistent": early_stage or demo_count > 0,  # SPDX-License-Identifier: MIT | 早期允许无 Demo，进入原型后必须有可运行证据。
-            "basic_product_feasibility": dimensions["feasibility"].score >= 2,  # SPDX-License-Identifier: MIT | 记录资源充足假设下的产品可实现性门槛。
+            "basic_feasibility": dimensions["feasibility"].score >= 2,  # SPDX-License-Identifier: MIT | 记录基本可落地门槛。
         }  # SPDX-License-Identifier: MIT | 硬门槛生成结束。
         missing_dimensions = tuple(name for name, evidence in dimensions.items() if evidence.score <= 1)  # SPDX-License-Identifier: MIT | 收集薄弱或未知维度。
         strengths = tuple(f"{name} 有明确输入依据" for name, evidence in dimensions.items() if evidence.score >= 3)  # SPDX-License-Identifier: MIT | 仅从高分字段生成优势。
@@ -161,8 +155,7 @@ class DeterministicEvidenceExtractor:  # SPDX-License-Identifier: MIT | 提供�
         uncertainties = tuple(f"待补充 {name}" for name in missing_dimensions)  # SPDX-License-Identifier: MIT | 明确区分未知与负面判断。
         coverage = sum(1 for evidence in dimensions.values() if evidence.score >= 2) / len(DIMENSIONS)  # SPDX-License-Identifier: MIT | 计算九维信息覆盖率。
         confidence = round(max(0.25, min(0.95, 0.45 + coverage * 0.4 + min(evidence_count, 3) * 0.04 - len(signals) * 0.2)), 2)  # SPDX-License-Identifier: MIT | 计算可复现的提取可靠度。
-        resource_readiness = self._resource_readiness(project)  # SPDX-License-Identifier: MIT | 另算当前资源准备度供团队和资金缺口报告使用。
-        return ExtractionResult(dimensions, hard_gates, human_review_ready, strengths, risks, uncertainties, confidence, signals, knowledge_comparison.__dict__, resource_readiness)  # SPDX-License-Identifier: MIT | 返回九维、真人评分资格、知识库比对和不计分资源准备度合同。
+        return ExtractionResult(dimensions, hard_gates, strengths, risks, uncertainties, confidence, signals, knowledge_comparison.__dict__)  # SPDX-License-Identifier: MIT | 返回含类型知识库对比快照的结构化证据合同。
 
     def _present(self, value: Any) -> bool:  # SPDX-License-Identifier: MIT | 统一判断字段是否具有实际内容。
         return bool(value.strip()) if isinstance(value, str) else value not in (None, [], {})  # SPDX-License-Identifier: MIT | 排除空值、空集合和纯空白字符串。
@@ -176,22 +169,6 @@ class DeterministicEvidenceExtractor:  # SPDX-License-Identifier: MIT | 提供�
         length = len(value.strip()) if isinstance(value, str) else 0  # SPDX-License-Identifier: MIT | 统计清洗后的文本长度。
         score = 4 if length >= 100 else 3 if length >= 45 else 2 if length >= 18 else 1 if length else 0  # SPDX-License-Identifier: MIT | 使用透明长度规则衡量描述充分度。
         return DimensionEvidence(score, f"字段包含 {length} 个字符，尚未验证设计质量", (path,) if length else ())  # SPDX-License-Identifier: MIT | 避免把文本长度冒充设计质量。
-
-    def _progression_score(self, value: Any) -> DimensionEvidence:  # SPDX-License-Identifier: MIT | 按游戏真实时间尺度评估成长与反馈闭环。
-        if not isinstance(value, dict):  # SPDX-License-Identifier: MIT | 旧版自由文本缺少局内局外结构，不能继续按字数给高分。
-            score = 1 if self._present(value) else 0  # SPDX-License-Identifier: MIT | 对旧版非空描述只保留最低迁移分，要求重新结构化确认。
-            return DimensionEvidence(score, "成长反馈尚未按局内、局外或混合模式结构化", ("progression_feedback",) if score else ())  # SPDX-License-Identifier: MIT | 明确旧答案需要迁移而非判定设计失败。
-        mode = str(value.get("mode") or "unknown")  # SPDX-License-Identifier: MIT | 读取局内、局外、混合或无成长模式。
-        in_match = self._nonempty_list(value.get("in_match_progression"))  # SPDX-License-Identifier: MIT | 读取单局内经济、科技、兵力、地图或构筑进程。
-        meta = self._nonempty_list(value.get("meta_progression"))  # SPDX-License-Identifier: MIT | 读取局间解锁、账号成长或长期内容进程。
-        signals = self._nonempty_list(value.get("feedback_signals"))  # SPDX-License-Identifier: MIT | 读取视觉、音频、数值、状态变化或因果报告反馈。
-        tradeoffs = self._present(value.get("decision_tradeoffs"))  # SPDX-License-Identifier: MIT | 检查成长是否改变选择而非只增加数值。
-        failure = self._present(value.get("failure_learning"))  # SPDX-License-Identifier: MIT | 检查失败、回退、复盘或再尝试反馈。
-        layer_present = bool(in_match) if mode == "in_match" else bool(meta) if mode == "meta" else bool(in_match and meta) if mode == "hybrid" else bool(in_match or meta) if mode == "none" else False  # SPDX-License-Identifier: MIT | 只要求所选主要时间尺度具备实际成长，RTS 不因没有局外成长被扣分。
-        checks = (layer_present, bool(signals), tradeoffs, failure)  # SPDX-License-Identifier: MIT | 使用四项结构证据而非文本长度计算成长反馈。
-        score = sum(checks)  # SPDX-License-Identifier: MIT | 每个闭环证据贡献一分，总分零到四。
-        rationale = f"模式={mode}；局内机制={len(in_match)}；局外机制={len(meta)}；反馈信号={len(signals)}；选择影响={tradeoffs}；失败学习={failure}"  # SPDX-License-Identifier: MIT | 生成可复核的分层成长反馈理由。
-        return DimensionEvidence(score, rationale, ("progression_feedback",) if score else ())  # SPDX-License-Identifier: MIT | 返回不偏向局外成长的结构化维度证据。
 
     def _optional_score(self, value: Any, path: str) -> DimensionEvidence:  # SPDX-License-Identifier: MIT | 评估不适用时不应惩罚的维度。
         if isinstance(value, dict) and self._present(value.get("not_applicable_reason")):  # SPDX-License-Identifier: MIT | 只接受含实际文字理由的不适用声明。
@@ -211,34 +188,14 @@ class DeterministicEvidenceExtractor:  # SPDX-License-Identifier: MIT | 提供�
         score = min(4, base.score + 1) if model in known_models and base.score >= 1 else base.score  # SPDX-License-Identifier: MIT | 有明确模式时提高结构完整度而非商业优劣。
         return DimensionEvidence(score, f"商业模式={model or '未知'}；{base.rationale}", tuple(path for path in ("business_model", "value_exchange") if self._present(project.get(path))))  # SPDX-License-Identifier: MIT | 返回模式相关证据路径。
 
-    def _product_feasibility_score(self, project: dict[str, Any]) -> DimensionEvidence:  # SPDX-License-Identifier: MIT | 在团队资金充足假设下评估产品能否实现。
-        value = project.get("production_feasibility") if isinstance(project.get("production_feasibility"), dict) else {}  # SPDX-License-Identifier: MIT | 安全读取产品可实现性结构答案。
-        impossible = self._nonempty_list(value.get("blocking_constraints"))  # SPDX-License-Identifier: MIT | 读取物理、平台政策或关键依赖层面的明确阻断。
-        unresolved = self._nonempty_list(value.get("unresolved_high_risks"))  # SPDX-License-Identifier: MIT | 读取尚未验证的高风险技术或内容问题。
-        checks = (value.get("scope_bounded") is True, value.get("technical_path_known") is True, value.get("platform_constraints_known") is True, value.get("prototype_validation_plan") is True)  # SPDX-License-Identifier: MIT | 检查范围、技术路径、平台约束和原型验证四类产品证据。
-        evidence_count = sum(checks)  # SPDX-License-Identifier: MIT | 统计与当前团队规模和资金无关的实现证据。
-        if impossible:  # SPDX-License-Identifier: MIT | 明确存在不可绕过阻断时直接判定当前方案不可实现。
-            score = 0  # SPDX-License-Identifier: MIT | 将未解决的硬阻断映射为零分。
-        elif unresolved and value.get("prototype_validation_plan") is not True:  # SPDX-License-Identifier: MIT | 高风险存在且无验证方案时限制产品可实现性。
-            score = min(1, evidence_count)  # SPDX-License-Identifier: MIT | 防止只写技术路线却不处理核心未知获得高分。
-        elif unresolved:  # SPDX-License-Identifier: MIT | 有验证计划的高风险项目仍需保守限制。
-            score = min(3, evidence_count)  # SPDX-License-Identifier: MIT | 允许进入验证但不能视为无风险可实现。
-        else:  # SPDX-License-Identifier: MIT | 无明确高风险或阻断时按四类证据覆盖评分。
-            score = evidence_count  # SPDX-License-Identifier: MIT | 范围、技术、平台、验证各贡献一分。
-        rationale = f"资源充足假设；范围受控={checks[0]}；技术路径明确={checks[1]}；平台约束明确={checks[2]}；原型验证计划={checks[3]}；高风险={len(unresolved)}；硬阻断={len(impossible)}"  # SPDX-License-Identifier: MIT | 明确分数不由当前团队和资金决定。
-        return DimensionEvidence(score, rationale, ("scope", "production_feasibility"))  # SPDX-License-Identifier: MIT | 返回产品范围与实现约束证据路径。
-
-    def _resource_readiness(self, project: dict[str, Any]) -> dict[str, Any]:  # SPDX-License-Identifier: MIT | 单独计算当前资源准备度供缺口诊断展示。
-        team = project.get("team") if isinstance(project.get("team"), dict) else {}  # SPDX-License-Identifier: MIT | 安全读取当前团队事实。
-        schedule = project.get("schedule") if isinstance(project.get("schedule"), dict) else {}  # SPDX-License-Identifier: MIT | 安全读取当前计划与资金事实。
-        roles = self._nonempty_list(team.get("roles"))  # SPDX-License-Identifier: MIT | 读取当前已覆盖角色。
-        checks = (self._positive(team.get("size")), bool(roles), self._positive(schedule.get("months")), self._positive(schedule.get("budget")), self._positive(schedule.get("available_funding")))  # SPDX-License-Identifier: MIT | 检查人数、角色、周期、预算和已落实资金。
-        count = sum(checks)  # SPDX-License-Identifier: MIT | 统计当前资源准备证据数量。
-        score = 4 if count == 5 else 3 if count == 4 else 2 if count >= 2 else 1 if count == 1 else 0  # SPDX-License-Identifier: MIT | 将五项现状映射为独立零到四级准备度。
-        return {"score": score, "evidence_count": count, "total_checks": 5, "counts_toward_game_dna": False, "rationale": f"当前资源准备证据 {count}/5；该结果只用于团队、资金和周期缺口，不参与九维总分或评分门槛"}  # SPDX-License-Identifier: MIT | 返回明确声明不计入九维的资源准备度。
-
-    def _nonempty_list(self, value: Any) -> tuple[str, ...]:  # SPDX-License-Identifier: MIT | 统一清洗结构化字符串列表。
-        return tuple(item.strip() for item in value if isinstance(item, str) and item.strip()) if isinstance(value, list) else ()  # SPDX-License-Identifier: MIT | 排除空白、非字符串和非列表输入。
+    def _feasibility_score(self, project: dict[str, Any]) -> DimensionEvidence:  # SPDX-License-Identifier: MIT | 检查团队、周期、预算和范围。
+        team = project.get("team") if isinstance(project.get("team"), dict) else {}  # SPDX-License-Identifier: MIT | 安全读取团队对象。
+        schedule = project.get("schedule") if isinstance(project.get("schedule"), dict) else {}  # SPDX-License-Identifier: MIT | 安全读取计划对象。
+        roles = team.get("roles") if isinstance(team.get("roles"), list) else []  # SPDX-License-Identifier: MIT | 只接受结构化团队角色列表。
+        checks = (any(self._present(role) for role in roles), self._positive(team.get("size")), self._positive(schedule.get("months")), self._positive(schedule.get("budget")), self._present(project.get("scope")))  # SPDX-License-Identifier: MIT | 检查五项包含实际内容的基本落地证据。
+        count = sum(checks)  # SPDX-License-Identifier: MIT | 统计有效落地证据。
+        score = 4 if count == 5 else 3 if count == 4 else 2 if count == 3 else 1 if count else 0  # SPDX-License-Identifier: MIT | 根据证据覆盖生成暂定分。
+        return DimensionEvidence(score, f"团队、周期、预算、范围共满足 {count}/5 项", ("team", "schedule", "scope"))  # SPDX-License-Identifier: MIT | 返回可落地证据路径。
 
     def _positive(self, value: Any) -> bool:  # SPDX-License-Identifier: MIT | 检查数值是否为有效正数。
         return isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0  # SPDX-License-Identifier: MIT | 排除布尔值和非正数。
@@ -263,7 +220,7 @@ class GameRatingAgent:  # SPDX-License-Identifier: MIT | 编排证据提取、�
         self._step(steps, "structure", self._score_detail(extraction, ("core_loop", "content_structure")))  # SPDX-License-Identifier: MIT | 记录结构分析摘要。
         self._step(steps, "motivation", self._score_detail(extraction, ("first_attraction", "sustained_motivation", "progression_feedback")))  # SPDX-License-Identifier: MIT | 记录动机分析摘要。
         self._step(steps, "value", self._score_detail(extraction, ("value_exchange", "social_competition")))  # SPDX-License-Identifier: MIT | 记录价值分析摘要。
-        self._step(steps, "feasibility", f"{self._score_detail(extraction, ('feasibility',))}；资源准备度={extraction.resource_readiness.get('score', 0)}/4（不计分）")  # SPDX-License-Identifier: MIT | 同时审计产品可实现性与不计分的资源准备度。
+        self._step(steps, "feasibility", self._score_detail(extraction, ("feasibility",)))  # SPDX-License-Identifier: MIT | 记录可落地分析摘要。
         self._step(steps, "innovation", self._score_detail(extraction, ("innovation_candidate",)))  # SPDX-License-Identifier: MIT | 记录创新候选摘要。
         result, blockers = self._decide(extraction)  # SPDX-License-Identifier: MIT | 仅由确定性规则形成业务结论。
         self._step(steps, "rule_engine", f"规则版本={self.rubric.version}；结论={result.value}")  # SPDX-License-Identifier: MIT | 记录规则引擎结论和版本。
@@ -279,7 +236,7 @@ class GameRatingAgent:  # SPDX-License-Identifier: MIT | 编排证据提取、�
             "类型知识库覆盖常见商业类型和机制组合，但不会替代接入实时商店、国内渠道或竞品数据库后的市场全量比对。",  # SPDX-License-Identifier: MIT | 明确内置知识库与未来实时市场数据源的边界。
             "进入真人评分仍需项目完成度达到平台规定门槛。",  # SPDX-License-Identifier: MIT | 保留真人评分阶段门槛。
         )  # SPDX-License-Identifier: MIT | 能力边界定义结束。
-        return RatingResult(run_id, project_id, project_version, result, dna, extraction.hard_gates, extraction.human_review_ready, tuple(blockers), extraction.strengths, extraction.risks, tuple(actions), extraction.confidence, needs_review, self.rubric.version, self.extractor.version, input_hash, tuple(steps), limitations, extraction.knowledge_comparison, extraction.resource_readiness)  # SPDX-License-Identifier: MIT | 返回九维、真人评分资格、类型比对和不计分资源准备度的完整报告。
+        return RatingResult(run_id, project_id, project_version, result, dna, extraction.hard_gates, tuple(blockers), extraction.strengths, extraction.risks, tuple(actions), extraction.confidence, needs_review, self.rubric.version, self.extractor.version, input_hash, tuple(steps), limitations, extraction.knowledge_comparison)  # SPDX-License-Identifier: MIT | 返回包含类型知识库比对的完整可追溯评分报告。
 
     def _decide(self, extraction: ExtractionResult) -> tuple[AssessmentResult, list[str]]:  # SPDX-License-Identifier: MIT | 使用暂定规则计算业务结论。
         failed_gates = [name for name, passed in extraction.hard_gates.items() if not passed]  # SPDX-License-Identifier: MIT | 收集致命硬门槛失败项。
@@ -302,8 +259,6 @@ class GameRatingAgent:  # SPDX-License-Identifier: MIT | 编排证据提取、�
             blockers.append(f"证据可靠度 {extraction.confidence:.2f} 低于暂定门槛 {self.rubric.min_confidence_for_b_gate:.2f}")  # SPDX-License-Identifier: MIT | 记录可靠度阻塞证据。
         if extraction.injection_signals:  # SPDX-License-Identifier: MIT | 不可信内容命中注入信号时拒绝自动放行。
             blockers.append("输入包含疑似提示词注入内容，需人工复核")  # SPDX-License-Identifier: MIT | 记录安全复核阻塞项。
-        if not extraction.human_review_ready:  # SPDX-License-Identifier: MIT | 未达到完成度时允许继续获得诊断但禁止进入真人评分候选。
-            blockers.append("当前完成度未达到真人评分申请门槛：请至少完成垂直切片并提交可运行版本")  # SPDX-License-Identifier: MIT | 用创作者可执行的语言说明完成度与 Demo 要求。
         return (AssessmentResult.C, blockers) if blockers else (AssessmentResult.B_GATE, [])  # SPDX-License-Identifier: MIT | 无阻塞时才返回 B_GATE。
 
     def _actions(self, blockers: list[str], extraction: ExtractionResult) -> list[str]:  # SPDX-License-Identifier: MIT | 将问题映射为可执行补充动作。

@@ -54,8 +54,7 @@ class ArtifactStore:  # SPDX-License-Identifier: MIT | 在 Web 根目录之外�
         self.root.mkdir(parents=True, exist_ok=True)  # SPDX-License-Identifier: MIT | 创建隔离存储目录。
 
     def ingest(self, project_id: str, filename: str, kind: str, content: bytes) -> StoredArtifact:  # SPDX-License-Identifier: MIT | 验证并隔离保存一个上传文件。
-        canonical_project_id = self._project_id(project_id)  # SPDX-License-Identifier: MIT | 保留创作者项目编号原文并在进入存储前验证其长度和控制字符。
-        storage_project_key = self._project_storage_key(canonical_project_id)  # SPDX-License-Identifier: MIT | 为文件系统目录生成安全且不会因中文字符折叠碰撞的存储键。
+        safe_project_id = self._safe_token(project_id, "project_id")  # SPDX-License-Identifier: MIT | 防止项目标识产生路径穿越。
         safe_name = self._safe_filename(filename)  # SPDX-License-Identifier: MIT | 清洗仅用于展示的原始文件名。
         extension = Path(safe_name).suffix.lower()  # SPDX-License-Identifier: MIT | 在解码后读取最后一个扩展名。
         if extension not in ALLOWED_EXTENSIONS:  # SPDX-License-Identifier: MIT | 使用业务格式白名单而非黑名单。
@@ -73,7 +72,7 @@ class ArtifactStore:  # SPDX-License-Identifier: MIT | 在 Web 根目录之外�
         extracted_text, parse_status, parse_notes = self._extract_text(extension, content)  # SPDX-License-Identifier: MIT | 仅执行受限静态文本提取。
         security_notes.extend(parse_notes)  # SPDX-License-Identifier: MIT | 合并提取能力限制说明。
         artifact_id = f"art_{uuid.uuid4().hex}"  # SPDX-License-Identifier: MIT | 生成不可预测资料标识。
-        project_dir = (self.root / storage_project_key).resolve()  # SPDX-License-Identifier: MIT | 使用安全存储键计算项目隔离子目录。
+        project_dir = (self.root / safe_project_id).resolve()  # SPDX-License-Identifier: MIT | 计算项目隔离子目录。
         if self.root not in project_dir.parents:  # SPDX-License-Identifier: MIT | 再次确认项目目录位于隔离根目录内。
             raise ArtifactValidationError("项目存储路径无效")  # SPDX-License-Identifier: MIT | 阻止任何路径逃逸。
         project_dir.mkdir(parents=True, exist_ok=True)  # SPDX-License-Identifier: MIT | 创建项目隔离目录。
@@ -85,18 +84,13 @@ class ArtifactStore:  # SPDX-License-Identifier: MIT | 在 Web 根目录之外�
         with os.fdopen(descriptor, "wb") as handle:  # SPDX-License-Identifier: MIT | 将文件描述符交给上下文管理器。
             handle.write(content)  # SPDX-License-Identifier: MIT | 一次写入已通过校验的原始内容。
         digest = sha256(content).hexdigest()  # SPDX-License-Identifier: MIT | 计算内容哈希用于版本和去重。
-        return StoredArtifact(artifact_id, canonical_project_id, kind, safe_name, stored_filename, extension, digest, len(content), parse_status, extracted_text, tuple(security_notes))  # SPDX-License-Identifier: MIT | 返回保留原项目编号且不执行文件的安全资料记录。
+        return StoredArtifact(artifact_id, safe_project_id, kind, safe_name, stored_filename, extension, digest, len(content), parse_status, extracted_text, tuple(security_notes))  # SPDX-License-Identifier: MIT | 返回不执行文件的安全资料记录。
 
-    def _project_id(self, value: str) -> str:  # SPDX-License-Identifier: MIT | 验证仅用于业务归属而非路径拼接的项目编号。
-        project_id = str(value).strip()  # SPDX-License-Identifier: MIT | 规范化项目编号前后空白但保留中文等展示字符。
-        if not project_id or len(project_id) > 120 or any(ord(character) < 32 for character in project_id):  # SPDX-License-Identifier: MIT | 拒绝空、过长或含控制字符的项目编号。
-            raise ArtifactValidationError("项目编号无效或过长")  # SPDX-License-Identifier: MIT | 返回新手可理解的项目编号校验错误。
-        return project_id  # SPDX-License-Identifier: MIT | 返回可在数据库和 API 合同中保持一致的原项目编号。
-
-    def _project_storage_key(self, project_id: str) -> str:  # SPDX-License-Identifier: MIT | 为项目资料目录创建不泄露原文且无字符折叠碰撞的安全键。
-        if re.fullmatch(r"[A-Za-z0-9_-]{1,80}", project_id):  # SPDX-License-Identifier: MIT | 保留既有 ASCII 编号的目录兼容性和可读性。
-            return project_id  # SPDX-License-Identifier: MIT | 返回与旧版本一致的安全 ASCII 目录名。
-        return f"project_{sha256(project_id.encode('utf-8')).hexdigest()}"  # SPDX-License-Identifier: MIT | 对含中文或其他安全展示字符的编号使用确定性哈希目录键。
+    def _safe_token(self, value: str, label: str) -> str:  # SPDX-License-Identifier: MIT | 清洗用于目录或标识的短令牌。
+        token = re.sub(r"[^A-Za-z0-9_-]", "_", str(value))[:80]  # SPDX-License-Identifier: MIT | 只保留跨平台安全字符。
+        if not token:  # SPDX-License-Identifier: MIT | 拒绝清洗后为空的标识。
+            raise ArtifactValidationError(f"{label} 无效")  # SPDX-License-Identifier: MIT | 返回具体标识错误。
+        return token  # SPDX-License-Identifier: MIT | 返回安全令牌。
 
     def _safe_filename(self, filename: str) -> str:  # SPDX-License-Identifier: MIT | 清洗仅用于显示和扩展判断的文件名。
         candidate = Path(str(filename).replace("\\", "/")).name  # SPDX-License-Identifier: MIT | 移除客户端路径部分。
@@ -132,7 +126,7 @@ class ArtifactStore:  # SPDX-License-Identifier: MIT | 在 Web 根目录之外�
                     raise ArtifactValidationError("压缩包疑似压缩炸弹")  # SPDX-License-Identifier: MIT | 拒绝异常压缩包。
                 for info in infos:  # SPDX-License-Identifier: MIT | 检查每个条目的规范路径。
                     normalized = info.filename.replace("\\", "/")  # SPDX-License-Identifier: MIT | 统一压缩条目路径分隔符。
-                    if normalized.startswith(("/", "//")) or re.match(r"^[A-Za-z]:/", normalized) or ".." in Path(normalized).parts:  # SPDX-License-Identifier: MIT | 同时检测 POSIX、UNC、Windows 盘符绝对路径和父目录逃逸。
+                    if normalized.startswith("/") or ".." in Path(normalized).parts:  # SPDX-License-Identifier: MIT | 检测绝对路径和父目录逃逸。
                         raise ArtifactValidationError("压缩包包含路径穿越条目")  # SPDX-License-Identifier: MIT | 拒绝 Zip Slip 风险。
                 if extension == ".docx" and "word/document.xml" not in {info.filename for info in infos}:  # SPDX-License-Identifier: MIT | DOCX 必须包含主文档部件。
                     raise ArtifactValidationError("DOCX 缺少主文档内容")  # SPDX-License-Identifier: MIT | 拒绝伪装或损坏 DOCX。

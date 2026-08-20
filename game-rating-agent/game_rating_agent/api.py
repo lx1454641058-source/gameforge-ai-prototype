@@ -13,7 +13,7 @@ from .artifacts import ArtifactValidationError  # SPDX-License-Identifier: MIT |
 from .service import GameRatingApplicationService  # SPDX-License-Identifier: MIT | 调用完整应用服务。
 
 MAX_REQUEST_BYTES = 140 * 1024 * 1024  # SPDX-License-Identifier: MIT | 覆盖 100MB 文件 Base64 后的请求体并限制资源占用。
-SERVICE_VERSION = "1.1.0"  # SPDX-License-Identifier: MIT | 标记产品可实现性、分层成长反馈和中文新手界面升级。
+SERVICE_VERSION = "1.0.0"  # SPDX-License-Identifier: MIT | 标记接入类型知识库、动态权重和结构化同质化比对后的服务版本。
 FRONTEND_ROOT = Path(__file__).with_name("frontend")  # SPDX-License-Identifier: MIT | 将同源前端静态资源定位到包内固定目录。
 STATIC_ROUTES = {"/": ("index.html", "text/html; charset=utf-8"), "/index.html": ("index.html", "text/html; charset=utf-8"), "/styles.css": ("styles.css", "text/css; charset=utf-8"), "/app.js": ("app.js", "text/javascript; charset=utf-8")}  # SPDX-License-Identifier: MIT | 只公开明确登记的前端静态文件。
 

@@ -3,7 +3,6 @@ from __future__ import annotations  # SPDX-License-Identifier: MIT | 启用延�
 from dataclasses import asdict, dataclass  # SPDX-License-Identifier: MIT | 定义结构化能力与推荐合同。
 from datetime import date  # SPDX-License-Identifier: MIT | 判断能力记录有效期。
 from typing import Any, Protocol  # SPDX-License-Identifier: MIT | 定义人才能力 Agent 网关接口。
-from threading import Lock  # SPDX-License-Identifier: MIT | 保护内存参考网关的幂等履约回写免受并发竞争。
 
 LEVEL_VALUES = {"L1": 1, "L2": 2, "L3": 3, "L4": 4}  # SPDX-License-Identifier: MIT | 定义能力等级的稳定比较顺序。
 
@@ -172,7 +171,6 @@ class InMemoryTalentCapabilityAgent:  # SPDX-License-Identifier: MIT | 提供跨
     def __init__(self, profiles: tuple[TalentProfile, ...]) -> None:  # SPDX-License-Identifier: MIT | 注入经过授权的人才能力档案。
         self.profiles = profiles  # SPDX-License-Identifier: MIT | 保存只读人才池。
         self.fulfillment_audit: dict[str, CapabilityFulfillmentFeedback] = {}  # SPDX-License-Identifier: MIT | 保存离线参考实现的幂等履约审计。
-        self._fulfillment_lock = Lock()  # SPDX-License-Identifier: MIT | 为检查和写入同一反馈标识建立原子临界区。
 
     def match(self, request: TalentMatchRequest) -> TalentMatchResponse:  # SPDX-License-Identifier: MIT | 按能力覆盖、证据和履约生成候选推荐。
         recommendations = [item for profile in self.profiles if (item := self._score_profile(profile, request)) is not None]  # SPDX-License-Identifier: MIT | 过滤不可用或无能力覆盖的候选。
@@ -186,15 +184,14 @@ class InMemoryTalentCapabilityAgent:  # SPDX-License-Identifier: MIT | 提供跨
         required_text = (feedback.feedback_id, feedback.project_id, feedback.project_version, feedback.talent_id, feedback.milestone_id, feedback.reviewer_id)  # SPDX-License-Identifier: MIT | 收集履约审计必须存在的标识字段。
         if any(not value.strip() for value in required_text) or feedback.rework_count < 0 or not feedback.skill_ids:  # SPDX-License-Identifier: MIT | 拒绝缺少主体、版本、里程碑、审核人或非法返工数的事件。
             return CapabilityFeedbackReceipt(feedback.feedback_id, "rejected", (), self.version)  # SPDX-License-Identifier: MIT | 返回拒绝且不写入幂等历史。
+        if feedback.feedback_id in self.fulfillment_audit:  # SPDX-License-Identifier: MIT | 防止消息重试重复计入履约历史。
+            return CapabilityFeedbackReceipt(feedback.feedback_id, "duplicate", feedback.skill_ids, self.version)  # SPDX-License-Identifier: MIT | 返回幂等重复确认。
         profile = next((item for item in self.profiles if item.talent_id == feedback.talent_id), None)  # SPDX-License-Identifier: MIT | 检查人才是否存在于授权能力池。
         known_skills = {record.skill_id for record in profile.capabilities} if profile else set()  # SPDX-License-Identifier: MIT | 获取人才已登记能力代码。
         affected = tuple(skill_id for skill_id in feedback.skill_ids if skill_id in known_skills)  # SPDX-License-Identifier: MIT | 只允许回写人才实际登记的能力。
         if profile is None or not affected or not feedback.evidence_ids:  # SPDX-License-Identifier: MIT | 拒绝无人才、无关联能力或无证据的反馈。
             return CapabilityFeedbackReceipt(feedback.feedback_id, "rejected", affected, self.version)  # SPDX-License-Identifier: MIT | 返回拒绝结果且不污染能力历史。
-        with self._fulfillment_lock:  # SPDX-License-Identifier: MIT | 原子执行重复检测和首次写入，确保并发重试只有一个请求被记录。
-            if feedback.feedback_id in self.fulfillment_audit:  # SPDX-License-Identifier: MIT | 防止并发或串行消息重试重复计入履约历史。
-                return CapabilityFeedbackReceipt(feedback.feedback_id, "duplicate", feedback.skill_ids, self.version)  # SPDX-License-Identifier: MIT | 返回幂等重复确认。
-            self.fulfillment_audit[feedback.feedback_id] = feedback  # SPDX-License-Identifier: MIT | 保存不可覆盖的履约事实供后续能力聚合服务消费。
+        self.fulfillment_audit[feedback.feedback_id] = feedback  # SPDX-License-Identifier: MIT | 保存不可覆盖的履约事实供后续能力聚合服务消费。
         return CapabilityFeedbackReceipt(feedback.feedback_id, "recorded", affected, self.version)  # SPDX-License-Identifier: MIT | 确认履约事件已记录。
 
     def _score_profile(self, profile: TalentProfile, request: TalentMatchRequest) -> TalentRecommendation | None:  # SPDX-License-Identifier: MIT | 计算单个人才的项目能力适配度。

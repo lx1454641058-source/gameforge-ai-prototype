@@ -64,7 +64,6 @@ BASE_MODULES = (  # SPDX-License-Identifier: MIT | 定义所有游戏首版需�
     ("store_assets", "商店素材与产品说明", "P1", ("真实玩法截图", "预告片", "功能一致的商店文案")),  # SPDX-License-Identifier: MIT | 定义商店素材模块。
     ("compliance", "隐私、内容与平台合规", "P0", ("隐私说明", "内容声明", "第三方 SDK 清单")),  # SPDX-License-Identifier: MIT | 定义合规模块。
 )  # SPDX-License-Identifier: MIT | 基础模块定义结束。
-MODULE_STATUS_KEYS = {"ux_onboarding": "ux", "art_pipeline": "art"}  # SPDX-License-Identifier: MIT | 将诊断模块代码映射到问卷和前端实际提交的状态键。
 
 class DiagnosticPlanner:  # SPDX-License-Identifier: MIT | 将项目事实映射为可执行诊断。
     def __init__(self, capability_gateway: TalentCapabilityAgentGateway | None = None, resolver: CapabilityRequirementResolver | None = None) -> None:  # SPDX-License-Identifier: MIT | 支持注入真实人才能力 Agent 网关。
@@ -98,8 +97,7 @@ class DiagnosticPlanner:  # SPDX-License-Identifier: MIT | 将项目事实映射
             catalog.extend((("economy", "经济与商业化系统", "P0", ("货币流图", "付费点与公平性说明")), ("analytics_liveops", "数据分析与持续运营", "P1", ("事件埋点表", "运营节奏与回滚方案"))))  # SPDX-License-Identifier: MIT | 添加经济和持续运营模块。
         gaps: list[ModuleGap] = []  # SPDX-License-Identifier: MIT | 初始化模块缺口列表。
         for module_id, name, priority, evidence in catalog:  # SPDX-License-Identifier: MIT | 逐项检查项目模块目录。
-            status_key = MODULE_STATUS_KEYS.get(module_id, module_id)  # SPDX-License-Identifier: MIT | 使用问卷状态键读取对应诊断模块的实际进度。
-            current = str(status.get(status_key) or "unknown")  # SPDX-License-Identifier: MIT | 读取创作者声明的当前状态并避免 UX、美术字段被误判未知。
+            current = str(status.get(module_id) or "unknown")  # SPDX-License-Identifier: MIT | 读取创作者声明的当前状态。
             if current not in {"ready", "validated"}:  # SPDX-License-Identifier: MIT | 仅验证完成的模块不列为缺口。
                 reason = f"当前状态为 {current}；需在进入下一阶段前形成可验证证据"  # SPDX-License-Identifier: MIT | 生成基于状态的缺口理由。
                 gaps.append(ModuleGap(module_id, name, current, reason, priority, tuple(evidence)))  # SPDX-License-Identifier: MIT | 追加结构化模块缺口。
@@ -124,7 +122,7 @@ class DiagnosticPlanner:  # SPDX-License-Identifier: MIT | 将项目事实映射
             "economy": ("数值/经济策划", "垂直切片前", "核心成员"),  # SPDX-License-Identifier: MIT | 映射经济设计角色。
             "analytics_liveops": ("数据与运营", "测试期", "兼职后转持续投入"),  # SPDX-License-Identifier: MIT | 映射数据运营角色。
         }  # SPDX-License-Identifier: MIT | 模块角色映射结束。
-        aliases = {"游戏策划": {"游戏策划", "策划", "designer"}, "客户端程序": {"客户端程序", "程序", "programmer", "developer"}, "UX/交互设计": {"ux/交互设计", "用户体验/交互", "ux", "交互", "交互设计"}, "美术负责人": {"美术负责人", "美术", "artist", "art"}, "音频设计": {"音频设计", "音频", "sound", "audio"}, "QA/测试": {"qa/测试", "测试/质量保障", "qa", "测试", "tester"}, "发行运营": {"发行运营", "发行", "运营", "publishing"}, "合规/隐私顾问": {"合规/隐私顾问", "合规", "隐私", "legal"}, "后端/服务端程序": {"后端/服务端程序", "后端", "服务端", "backend"}, "安全工程师": {"安全工程师", "安全", "security"}, "数值/经济策划": {"数值/经济策划", "数值策划", "经济策划"}, "数据与运营": {"数据与运营", "数据", "数据分析", "liveops"}}  # SPDX-License-Identifier: MIT | 同时接受前端的新手中文能力标签和既有角色别名，避免重复推荐。
+        aliases = {"游戏策划": {"游戏策划", "策划", "designer"}, "客户端程序": {"客户端程序", "程序", "programmer", "developer"}, "UX/交互设计": {"ux/交互设计", "ux", "交互", "交互设计"}, "美术负责人": {"美术负责人", "美术", "artist", "art"}, "音频设计": {"音频设计", "音频", "sound", "audio"}, "QA/测试": {"qa/测试", "qa", "测试", "tester"}, "发行运营": {"发行运营", "发行", "运营", "publishing"}, "合规/隐私顾问": {"合规/隐私顾问", "合规", "隐私", "legal"}, "后端/服务端程序": {"后端/服务端程序", "后端", "服务端", "backend"}, "安全工程师": {"安全工程师", "安全", "security"}, "数值/经济策划": {"数值/经济策划", "数值策划", "经济策划"}, "数据与运营": {"数据与运营", "数据", "数据分析", "liveops"}}  # SPDX-License-Identifier: MIT | 定义常见中英文现有角色别名避免重复推荐。
         gaps: list[RoleGap] = []  # SPDX-License-Identifier: MIT | 初始化团队角色缺口。
         for gap in modules:  # SPDX-License-Identifier: MIT | 逐个缺失模块检查责任角色。
             requirement = requirements.get(gap.module_id)  # SPDX-License-Identifier: MIT | 读取模块对应角色要求。
@@ -156,7 +154,7 @@ class DiagnosticPlanner:  # SPDX-License-Identifier: MIT | 将项目事实映射
             RoadmapStep(1, "资料与目标冻结", "确认问卷、目标玩家、平台、范围和预算", ("所有 AI 代填关键答案由创作者确认", "方案文件与资料清单哈希冻结")),  # SPDX-License-Identifier: MIT | 定义输入冻结阶段。
             RoadmapStep(2, "核心原型", "用最低成本证明核心循环和首次吸引", ("可从启动进入一局完整循环", "关键假设有试玩证据")),  # SPDX-License-Identifier: MIT | 定义核心原型阶段。
             RoadmapStep(3, "垂直切片", "用接近目标质量的一小段验证内容生产与团队协作", ("核心美术、音频、UX 达到目标基准", "工期与成本可被重新估算")),  # SPDX-License-Identifier: MIT | 定义垂直切片阶段。
-            RoadmapStep(4, "正式生产", "按里程碑扩展内容并持续控制范围", ("优先完成以下 P0 模块：" + "、".join(missing_names) if missing_names else "所有 P0 模块已验证", "每个里程碑有可运行构建和回归记录")),  # SPDX-License-Identifier: MIT | 用与缺口事实一致的完成标准定义正式生产阶段。
+            RoadmapStep(4, "正式生产", "按里程碑扩展内容并持续控制范围", ("P0 模块已关闭：" + "、".join(missing_names) if missing_names else "所有 P0 模块已验证", "每个里程碑有可运行构建和回归记录")),  # SPDX-License-Identifier: MIT | 定义正式生产阶段。
             RoadmapStep(5, "Alpha/Beta 与真人验证", "完成全部功能后验证稳定性、留存和体验", ("功能锁定", "关键缺陷关闭", "完成度与 B_GATE 满足平台真人评分入口")),  # SPDX-License-Identifier: MIT | 定义测试与真人验证阶段。
             RoadmapStep(6, "候选版本与上线", "锁定候选构建并完成目标商店审核", ("构建、商店描述和声明一致", "平台检查、人工终审和回滚方案完成")),  # SPDX-License-Identifier: MIT | 定义上线阶段。
             RoadmapStep(7, "上线后运营", "监控质量、反馈和商业指标并控制更新风险", ("崩溃与关键指标可观测", "热修复、客服和版本回退流程可执行")),  # SPDX-License-Identifier: MIT | 定义上线后运营阶段。

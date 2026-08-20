@@ -7,7 +7,21 @@ import json  # SPDX-License-Identifier: MIT | 生成稳定资料清单哈希。
 from .questionnaire import QUESTIONNAIRE  # SPDX-License-Identifier: MIT | 复用唯一问卷注册表校验题号和答案类型。
 from .knowledge_base import GENRE_IDS, INNOVATION_AXIS_IDS, VALIDATION_METHOD_IDS  # SPDX-License-Identifier: MIT | 校验评分前使用的类型、创新位置和验证方式代码已经登记。
 
-CRITICAL_QUESTION_IDS = tuple(question.question_id for question in QUESTIONNAIRE if question.required)  # SPDX-License-Identifier: MIT | 直接从唯一问卷合同派生全部必填确认项，避免新增必填题被服务端遗漏。
+CRITICAL_QUESTION_IDS = (  # SPDX-License-Identifier: MIT | 定义评分前必须确认的问卷字段。
+    "pitch",  # SPDX-License-Identifier: MIT | 确认游戏一句话定位。
+    "core_loop",  # SPDX-License-Identifier: MIT | 确认玩家核心行为链。
+    "first_session_hook",  # SPDX-License-Identifier: MIT | 确认首次吸引机制。
+    "long_term_motivation",  # SPDX-License-Identifier: MIT | 确认持续动机。
+    "business_model",  # SPDX-License-Identifier: MIT | 确认商业模式。
+    "value_exchange",  # SPDX-License-Identifier: MIT | 确认玩家价值交换。
+    "team",  # SPDX-License-Identifier: MIT | 确认现有团队结构。
+    "schedule",  # SPDX-License-Identifier: MIT | 确认周期和预算。
+    "scope",  # SPDX-License-Identifier: MIT | 确认首发范围。
+    "development_stage",  # SPDX-License-Identifier: MIT | 确认当前制作阶段以解释 Demo 是否应存在。
+    "platforms",  # SPDX-License-Identifier: MIT | 确认目标平台。
+    "genre_ids",  # SPDX-License-Identifier: MIT | 确认类型知识库比对基础。
+    "gameplay_features",  # SPDX-License-Identifier: MIT | 确认玩法机制比对基础。
+)  # SPDX-License-Identifier: MIT | 必须确认字段定义结束。
 
 ANSWER_SOURCES = {"creator", "ai_prefill", "document_extract", "demo_extract"}  # SPDX-License-Identifier: MIT | 限定问卷答案来源。
 ARTIFACT_KINDS = {"design_document", "pitch_deck", "spreadsheet", "image", "video", "demo_build", "source_snapshot", "other"}  # SPDX-License-Identifier: MIT | 限定首版上传资料类型。
